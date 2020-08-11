@@ -1,0 +1,19 @@
+.json_editor > div {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    overflow: hidden;
+    grid-template-rows: 40px 1fr;
+    grid-template-columns: 1fr;
+    gap: 0px 0px;
+    grid-template-areas: "nav" "textarea";
+}
+
+.json_editor textarea {
+    font-family: monospace;
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+    border:none;
+    resize: none;
+}

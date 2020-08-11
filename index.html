@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+    <link href="assets/css/app.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/nav.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/list.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/json_editor.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/custom-file-input.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/form.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/table.css" rel="stylesheet" type="text/css">
+
+    <link href="assets/css/person.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/bild.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/familie.css" rel="stylesheet" type="text/css">
+    <link href="assets/fontawesome/css/all.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+    <!--
+        Content
+    -->
+
+    <nav>
+        <ul>
+            <li><a tabindex="1" href="." data-route="personen"><i class="fas fa-users"></i></a></li>
+            <li><a tabindex="1" href="." data-route="bilder"><i class="fas fa-images"></i></a></li>
+            <li><a tabindex="1" href="." data-route="events"><i class="fas fa-calendar-alt"></i></a></li>
+            <li><a tabindex="1" href="." data-route="timeline"><i class="fas fa-stream"></i></a></li>
+            <li><a tabindex="1" href="." data-route="familie"><i class="fas fa-project-diagram"></i></a></li>
+        </ul>
+    </nav>
+    <main>
+        <section data-tab="personen">
+            <nav>
+                <ul>
+                    <li><a tabindex="1"  href="." data-route="json_personen"><i class="fas fa-database"></i></a></li>
+                    <li>
+                        <button tabindex="1" class="new"><i class="fas fa-user-plus"></i></button>
+                    </li>
+                    <li>
+                        <button tabindex="1" class="table"><i class="fas fa-table"></i></button>
+                    </li>
+                    <li>
+                        <button tabindex="1" class="cards"><i class="fas fa-th-large"></i></button>
+                    </li>
+                </ul>
+            </nav>
+            <main>
+
+            </main>
+        </section>
+
+        <section id="bilder" data-tab="bilder">
+            <nav>
+                <ul>
+                    <li><a tabindex="1"  href="." data-route="json_bilder"><i class="fas fa-database"></i></a></li>
+                    <li>
+                        <button tabindex="1" class="new"><i class="fas fa-plus-square"></i></button>
+                    </li>
+                    <li>
+                        <button tabindex="1" class="table"><i class="fas fa-table"></i></button>
+                    </li>
+                    <li>
+                        <button tabindex="1" class="cards"><i class="fas fa-th-large"></i></button>
+                    </li>
+                    <li>
+                        <button tabindex="1" class="add_multi"><i class="fas fa-folder-plus"></i></button>
+                    </li>
+                </ul>
+            </nav>
+            <main>
+
+            </main>
+        </section>
+
+        <section id="json_bilder" data-tab="json_bilder" class="json_editor">
+            <div>
+                <nav>
+                    <ul>
+                        <li><a tabindex="1"  href="." data-route="bilder"><i class="fas fa-level-up-alt"></i></a></li>
+                        <li>
+                            <label for="fileupload_json_bilder" class="custom-file-input-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <input id="fileupload_json_bilder" type="file" class="custom-file-input">
+                            </label>
+                        </li>
+                        <li>
+                            <button class="download"><i class="fas fa-download"></i></button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <main>
+                <textarea></textarea>
+            </main>
+        </section>
+
+        <section id="json_personen" data-tab="json_personen" class="json_editor">
+            <div>
+                <nav>
+                    <ul>
+                        <li><a tabindex="1" href="." data-route="personen"><i class="fas fa-level-up-alt"></i></a></li>
+                        <li>
+                            <label for="fileupload_json_personen" class="custom-file-input-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <input id="fileupload_json_personen" type="file" class="custom-file-input">
+                            </label>
+                        </li>
+                        <li>
+                            <button class="download"><i class="fas fa-download"></i></button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <main>
+                <textarea></textarea>
+            </main>
+        </section>
+
+        <section data-tab="person">
+            <div>
+                <nav>
+                    <ul>
+                        <li><a tabindex="1"  href="." data-route="personen"><i class="fas fa-level-up-alt"></i></a></li>
+                        <li>
+                            <button class="new"><i class="fas fa-user-plus"></i></button>
+                        </li>
+                        <li>
+                            <button class="pre"><i class="fas fa-chevron-left"></i></button>
+                        </li>
+                        <li>
+                            <button class="next"><i class="fas fa-chevron-right"></i></button>
+                        </li>
+                        <li>
+                            <button class="save"><i class="fas fa-save"></i></button>
+                        </li>
+                        <li>
+                            <button class="delete"><i class="fas fa-trash"></i></button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <main></main>
+        </section>
+
+        <section data-tab="bild" class="hideEdit">
+            <div>
+                <nav>
+                    <ul>
+                        <li><a tabindex="1"  href="." data-route="bilder"><i class="fas fa-level-up-alt"></i></a></li>
+                        <li>
+                            <button class="new"><i class="fas fa-plus-square"></i></button>
+                        </li>
+                        <li>
+                            <button class="pre"><i class="fas fa-chevron-left"></i></button>
+                        </li>
+                        <li>
+                            <button class="next"><i class="fas fa-chevron-right"></i></button>
+                        </li>
+                        <li>
+                            <button class="save"><i class="fas fa-save"></i></button>
+                        </li>
+                        <li>
+                            <button class="delete"><i class="fas fa-trash"></i></button>
+                        </li>
+                        <li>
+                            <button class="zoom_with"><i class="fas fa-compress-alt"></i></button>
+                        </li>
+                        <li>
+                            <button class="zoom_original"><i class="fas fa-expand-alt"></i></button>
+                        </li>
+                        <li>
+                            <button class="hide_markers"><i class="fas fa-vector-square"></i><i class="fas fa-eye-slash"></i></button>
+                        </li>
+                        <li>
+                            <button class="show_markers"><i class="fas fa-vector-square"></i><i class="fas fa-eye"></i></button>
+                        </li>
+                        <li>
+                            <button class="hide_edit"><i class="fas fa-edit"></i><i class="fas fa-eye-slash"></i></button>
+                        </li>
+                        <li>
+                            <button class="show_edit"><i class="fas fa-edit"></i><i class="fas fa-eye"></i></button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <main></main>
+        </section>
+
+        <section data-tab="timeline">
+            <div>
+                <nav>
+                    <ul>
+                    </ul>
+                </nav>
+            </div>
+            <main></main>
+        </section>
+
+        <section data-tab="familie">
+            <div>
+                <nav>
+                    <ul>
+                        <li><a tabindex="1"  href="." data-route="json_familie_graph"><i class="fas fa-database"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <main></main>
+        </section>
+
+        <section id="json_familie_graph" data-tab="json_familie_graph" class="json_editor">
+            <div>
+                <nav>
+                    <ul>
+                        <li><a tabindex="1" href="." data-route="familie"><i class="fas fa-level-up-alt"></i></a></li>
+                        <li>
+                            <label for="fileupload_json_familie_graph" class="custom-file-input-label">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <input id="fileupload_json_familie_graph" type="file" class="custom-file-input">
+                            </label>
+                        </li>
+                        <li>
+                            <button class="download"><i class="fas fa-download"></i></button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <main>
+                <textarea></textarea>
+            </main>
+        </section>
+
+    </main>
+
+    <!--
+        Template
+    -->
+
+    <script id="template_person_cards_wrapper" type="text/template">
+        <div id="personen_list" class="list">
+            %%body%%
+        </div>
+    </script>
+
+    <script id="template_person_cards" type="text/template">
+        <div class="person item">
+            <main tabindex="1" data-id="%%Id%%">
+                <div class="img" style="background-image:url('%%Bild%%')"></div>
+                <section>
+                    %%Vornamen%% %%Name%%
+                </section>
+            </main>
+        </div>
+    </script>
+
+    <script id="template_person_table_wrapper" type="text/template">
+        <table class="personen_table table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Vornamen</th>
+                    <th>Name</th>
+                    <th>Geboren</th>
+                    <th>Nickname</th>
+                    <th>Geschlecht</th>
+                    <th>Geburtstag</th>
+                    <th>Geburtsuhrzeit</th>
+                    <th>Geburtsort</th>
+                    <th>Gestorben</th>
+                    <th>Sterbeuhrzeit</th>
+                </tr>
+            </thead>
+            <tbody>
+                %%body%%
+            </tbody>
+        </table>
+    </script>
+
+    <script id="template_person_table" type="text/template">
+        <tr data-id="%%Id%%" tabindex="1">
+            <td>%%Id%%</td>
+            <td>%%Vornamen%%</td>
+            <td>%%Name%%</td>
+            <td>%%Geboren%%</td>
+            <td>%%Nickname%%</td>
+            <td>%%Geschlecht%%</td>
+            <td>%%Geburtstag%%</td>
+            <td>%%Geburtsuhrzeit%%</td>
+            <td>%%Geburtsort%%</td>
+            <td>%%Gestorben%%</td>
+            <td>%%Sterbeuhrzeit%%</td>
+        </tr>
+    </script>
+
+    <script id="template_bild_cards_wrapper" type="text/template">
+        <div id="bilder_list" class="list">
+            %%body%%
+        </div>
+    </script>
+
+    <script id="template_bild_cards" type="text/template">
+        <div class="bild item">
+            <main data-url="%%URL%%" data-id="%%Id%%">
+                <div class="img" style="background-image:url('%%URL%%')"></div>
+            </main>
+        </div>
+    </script>
+
+    <script id="template_bild_table_wrapper" type="text/template">
+        <table class="bilder_table table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>URL</th>
+                    <th>Datum</th>
+                    <th>Ort</th>
+                    <th>Land</th>
+                    <th>Personen</th>
+                </tr>
+            </thead>
+            <tbody>
+                %%body%%
+            </tbody>
+        </table>
+    </script>
+
+    <script id="template_bild_table" type="text/template">
+        <tr data-id="%%Id%%" tabindex="1">
+            <td>%%Id%%</td>
+            <td>%%URL%%</td>
+            <td>%%Datum%%</td>
+            <td>%%Ort%%</td>
+            <td>%%Land%%</td>
+            <td>%%PersonenLine%%</td>
+        </tr>
+    </script>
+
+    <script id="template_person_details" type="text/template">
+
+        <div class="images">
+            <div class="image" style="background-image: url('%%Bild%%')"></div>
+        </div>
+
+        <h1>%%Vornamen%% %%Name%%</h1>
+
+        <form>
+
+            <fieldset>
+
+                <h2>Person</h2>
+
+                <label>Id</label><br>
+                <input type="number" name="Id" value="%%Id%%" readonly><br>
+
+                <label>Vornamen</label><br>
+                <input type="text" name="Vornamen" value="%%Vornamen%%"><br>
+
+                <label>Name</label><br>
+                <input type="text" name="Name" value="%%Name%%"><br>
+
+                <label>Geschlecht</label><br>
+                <select name="Geschlecht" data-value="%%Geschlecht%%">
+                    <option value="" disabled>--Bitte auwählen--</option>
+                    <option value="Männlich">Männlich</option>
+                    <option value="Weiblich">Weiblich</option>
+                </select>
+
+                <label>Geboren</label><br>
+                <input type="text" name="Geboren" value="%%Geboren%%"><br>
+
+                <label>Geburtstag</label><br>
+                <input type="date" name="Geburtstag" value="%%Geburtstag%%"><br>
+
+                <label>Geburtsort</label><br>
+                <input type="text" name="Geburtsort" value="%%Geburtsort%%"><br>
+
+                <label>Nickname</label><br>
+                <input type="text" name="Nickname" value="%%Nickname%%"><br>
+
+                <label>Geburtsuhrzeit</label><br>
+                <input type="text" name="Geburtsuhrzeit" value="%%Geburtsuhrzeit%%"><br>
+
+                <label>Sterbeuhrzeit</label><br>
+                <input type="text" name="Sterbeuhrzeit" value="%%Sterbeuhrzeit%%"><br>
+
+                <label>Gestorben</label><br>
+                <input type="date" name="Gestorben" value="%%Gestorben%%"><br>
+
+                <label>Glaube</label><br>
+                <input type="text" name="Glaube" value="%%Glaube%%"><br>
+
+                <label>Bild</label><br>
+                <input type="text" name="Bild" value="%%Bild%%"><br>
+            </fieldset>
+
+            <fieldset>
+
+                <h2>Beziehungen</h2>
+
+                <label>Vater</label>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select name="Vater" data-value="%%Vater%%">
+                                    %%personOptionsHtml%%
+                                </select>
+                            </td>
+                            <td>
+                                <a href="?id=%%Vater%%#person"><i class="fas fa-id-card"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <label>Mutter</label>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select name="Mutter" data-value="%%Mutter%%">
+                                    %%personOptionsHtml%%
+                                </select>
+                            </td>
+                            <td>
+                                <a href="?id=%%Mutter%%#person"><i class="fas fa-id-card"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Kinder</h3>
+
+                <table data-key="Kinder">
+                    <thead>
+                        <th>Name</th>
+                        <th></th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        %%Kinder%%
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><button><i class="fas fa-plus"></i></button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <h3>Partner</h3>
+
+                <table data-key="Partner">
+                    <thead>
+                        <th>Id</th>
+                        <th>Partner</th>
+                        <th>Von</th>
+                        <th>Bis</th>
+                        <th>Ort</th>
+                        <th>Typ</th>
+                        <th></th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        %%Partner%%
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="8"><button><i class="fas fa-plus"></i></button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </fieldset>
+
+            <fieldset>
+
+                <h2>Berufe</h2>
+
+                <table data-key="Berufe">
+                    <thead>
+                        <th>Id</th>
+                        <th>Von</th>
+                        <th>Bis</th>
+                        <th>Bezeichnung</th>
+                        <th>Firma</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        %%Berufe%%
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6"><button><i class="fas fa-plus"></i></button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </fieldset>
+            <fieldset>
+
+                <h2>Wohnorte</h2>
+
+                <table data-key="Addressen">
+                    <thead>
+                        <th>Id</th>
+                        <th>Seit</th>
+                        <th>Straße</th>
+                        <th>Nummer</th>
+                        <th>Ort</th>
+                        <th>Land</th>
+                        <th>Note</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        %%Adressen%%
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="8"><button><i class="fas fa-plus"></i></button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </fieldset>
+            <fieldset>
+
+                <h2>Ereignisse</h2>
+
+                <table data-key="Ereignisse">
+                    <thead>
+                        <th>Id</th>
+                        <th>Art</th>
+                        <th>Wann</th>
+                        <th>Ort</th>
+                        <th>Note</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        %%Ereignisse%%
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6"><button><i class="fas fa-plus"></i></button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </fieldset>
+            <fieldset>
+
+                <h2>Anmerkungen</h2>
+
+                <textarea name="Note" rows="20">%%Note%%</textarea>
+            </fieldset>
+        </form>
+    </script>
+
+    <script id="template_person_details_Ereignisse" type="text/template">
+        <tr data-ereignis="%%Id%%">
+            <td style="width:100px"><input type="number" name="Id" value="%%Id%%"></td>
+            <td><input type="text" name="Art" value="%%Art%%"></td>
+            <td><input type="date" name="Wann" value="%%Wann%%"></td>
+            <td><input type="text" name="Ort" value="%%Ort%%"></td>
+            <td><input type="text" name="Note" value="%%Note%%"></td>
+            <td>
+                <button data-delete="%%Id%%"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    </script>
+
+    <script id="template_person_details_Berufe" type="text/template">
+        <tr data-beruf="%%Id%%">
+            <td><input type="number" name="Id" value="%%Id%%"></td>
+            <td><input type="date" name="Von" value="%%Von%%"></td>
+            <td><input type="date" name="Bis" value="%%Bis%%"></td>
+            <td><input type="text" name="Bezeichnung" value="%%Bezeichnung%%"></td>
+            <td><input type="text" name="Firma" value="%%Firma%%"></td>
+            <td>
+                <button data-delete="%%Id%%"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    </script>
+
+    <script id="template_person_details_Adressen" type="text/template">
+        <tr  data-addresse="%%Id%%">
+            <td style="width:100px"><input type="number" value="%%Id%%"></td>
+            <td><input type="date" value="%%Seit%%"></td>
+            <td><input type="text" value="%%Strasse%%"></td>
+            <td><input type="text" value="%%Nummer%%"></td>
+            <td><input type="text" value="%%Ort%%"></td>
+            <td><input type="text" value="%%Land%%"></td>
+            <td><input type="text" value="%%Note%%"></td>
+            <td>
+                <button data-delete="%%Id%%"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    </script>
+
+    <script id="template_person_details_Kinder" type="text/template">
+        <tr data-kind="%%Id%%">
+            <td>
+                <select name="Id" data-value="%%Id%%">
+                    %%personOptionsHtml%%
+                </select>
+            </td>
+            <td>
+                <a href="?id=%%Id%%#person"><i class="fas fa-id-card"></i></a>
+            </td>
+            <td>
+                <button data-delete="%%Id%%"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    </script>
+
+    <script id="template_person_details_Partner" type="text/template">
+        <tr data-partner="%%Id%%">
+            <td style="width:100px"><input type="number" name="Id" value="%%Id%%"></td>
+            <td>
+                <select name="Partner" data-value="%%Partner%%">
+                    %%personOptionsHtml%%
+                </select>
+            </td>
+            <td><input type="date" name="Von" value="%%Von%%"></td>
+            <td><input type="date" name="Bis" value="%%Bis%%"></td>
+            <td><input type="text" name="Ort" value="%%Ort%%"></td>
+            <td>
+                <select name="Typ" data-value="%%Typ%%">
+                    <option value selected disabled>--Bitte auswählen--</option>
+                    <option value="Ehe">Ehe</option>
+                    <option value="Beziehung">Beziehung</option>
+                </select>
+            </td>
+            <td>
+                <a href="?id=%%Id%%#person"><i class="fas fa-id-card"></i></a>
+            </td>
+            <td>
+                <button data-delete="%%Id%%"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    </script>
+
+    <script id="template_bild_details" type="text/template">
+        <div class="image-container">
+            <img src="%%URL%%">
+            <div class="markers"></div>
+            <canvas></canvas>
+
+        </div>
+        <form>
+            <fieldset>
+
+                <h3>Daten</h3>
+
+                <label>Id</label><br>
+                <input type="number" name="Id" value="%%Id%%" readonly><br>
+
+                <label>URL</label><br>
+                <input type="text" name="URL" value="%%URL%%"><br>
+
+                <label>Datum</label><br>
+                <input type="text" name="Datum" value="%%Datum%%"><br>
+
+                <label>Uhrzeit</label><br>
+                <input type="text" name="Uhrzeit" value="%%Uhrzeit%%"><br>
+
+                <label>Ort</label><br>
+                <input type="text" name="Ort" value="%%Ort%%"><br>
+
+                <label>Strasse</label><br>
+                <input type="text" name="Strasse" value="%%Strasse%%"><br>
+
+                <label>Nummer</label><br>
+                <input type="text" name="Nummer" value="%%Nummer%%"><br>
+
+                <label>Land</label><br>
+                <input type="text" name="Land" value="%%Land%%"><br>
+
+                <h3>Personen</h3>
+
+                <table data-key="Personen">
+                    <thead>
+                        <th>Id</th>
+                        <th>X</th>
+                        <th>Y</th>
+                        <th>Width</th>
+                        <th>Height</th>
+                        <th></th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        %%Personen%%
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="8"><button><i class="fas fa-plus"></i></button></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <h3>Anmerkungen</h3>
+                <textarea type="text"  rows="20" name="Note">%%Note%%</textarea>
+            </fieldset>
+        </form>
+    </script>
+
+    <script id="template_bild_details_Personen" type="text/template">
+        <tr data-person="%%Id%%">
+            <td>
+                <select name="Id" data-value="%%Id%%">
+                    %%personOptionsHtml%%
+                </select>
+            </td>
+            <td><input type="number" name="X" value="%%X%%"></td>
+            <td><input type="number" name="Y" value="%%Y%%"></td>
+            <td><input type="number" name="Width" value="%%Width%%"></td>
+            <td><input type="number" name="Height" value="%%Height%%"></td>
+
+            <td>
+                <a href="?id=%%Id%%#person"><i class="fas fa-id-card"></i></a>
+            </td>
+            <td>
+                <button data-delete="%%Id%%"><i class="fas fa-trash"></i></button>
+            </td>
+        </tr>
+    </script>
+
+    <script id="template_options_person" type="text/template">
+        <option value="%%Id%%">%%Vornamen%% %%Name%% (%%Id%%)</option>
+    </script>
+
+    <!--
+        Script
+    -->
+    <script src="assets/js/vendors/color.js"></script>
+    <script src="assets/js/vendors/FileSaver.min.js"></script>
+    <script src="assets/js/vendors/html2canvas.js"></script>
+
+    <script>let app = {}</script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/nav.js"></script>
+    <script src="assets/js/route.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/json_editor.js"></script>
+    <script src="assets/js/routes/bild.js"></script>
+    <script src="assets/js/routes/bilder.js"></script>
+    <script src="assets/js/routes/bilder_json.js"></script>
+    <script src="assets/js/routes/person.js"></script>
+    <script src="assets/js/routes/personen.js"></script>
+    <script src="assets/js/routes/personen_json.js"></script>
+    <script src="assets/js/routes/timeline.js"></script>
+    <script src="assets/js/routes/events.js"></script>
+    <script src="assets/js/routes/familie.js"></script>
+    <script src="assets/js/routes/familie_graph_json.js"></script>
+    <script>app.init()</script>
+</body>
+</html>

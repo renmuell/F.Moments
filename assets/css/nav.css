@@ -1,0 +1,98 @@
+/* Navigation */
+
+body > nav {
+    background: white;
+    grid-area: nav;
+    border-bottom: 1px solid #ccc;
+}
+
+body > nav ul {
+    margin:0;
+    padding: 0;
+    list-style: none;
+    height: 100%;
+}
+
+body > nav > ul > li {
+    height: 100%;
+    box-sizing: border-box;
+    float: left;
+    display: block;
+    border-right: 1px solid #ccc;
+}
+
+body > nav > ul > li > a {
+    line-height: 70px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    height: 70px;
+    display: block;
+    text-decoration: none;
+    color:black;
+}
+
+body > nav > ul > li > a.active {
+    background:#ccc;
+}
+
+/* Sub-Navigation */
+
+body section nav {
+    border-bottom: 1px solid #ccc;
+}
+
+body section nav ul {
+    margin:0;
+    padding: 0;
+    list-style: none;
+    height: 40px;
+}
+
+body section nav ul > li {
+    height: 100%;
+    box-sizing: border-box;
+    float: left;
+    display: block;
+    border-right: 1px solid #ccc;
+}
+
+body section nav ul > li > a {
+    line-height: 40px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    height: 40px;
+    display: block;
+    text-decoration: none;
+    color:black;
+    cursor: pointer;
+}
+
+body section nav ul > li > button {
+    background: none;
+    background-image: none;
+    border:none;
+    line-height: 40px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    height: 40px;
+    display: block;
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+body section nav ul > li > label {
+    background: none;
+    background-image: none;
+    border:none;
+    line-height: 40px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    height: 40px;
+    display: block;
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+}
