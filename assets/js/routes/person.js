@@ -61,8 +61,8 @@ app = Object.assign({
             })
         }
 
-        if (person.Addressen) {
-            person.Addressen = person.Addressen.map(a => {
+        if (person.Adressen) {
+            person.Adressen = person.Adressen.map(a => {
                 if (a.Seit) {
                     a.Seit = app.convertDINToISODate(a.Seit)
                 }
@@ -192,6 +192,7 @@ app = Object.assign({
             Partnertr.forEach(ktr => {
                 form.Partner.push({
                     Id: parseInt(ktr.querySelector('[name="Id"]').value),
+                    Partner: parseInt(ktr.querySelector('[name="Partner"]').value),
                     Von: app.convertISOToDINDate(ktr.querySelector('[name="Von"]').value),
                     Bis: app.convertISOToDINDate(ktr.querySelector('[name="Bis"]').value),
                     Ort: ktr.querySelector('[name="Ort"]').value,
@@ -232,13 +233,13 @@ app = Object.assign({
             })
         }
 
-        var Addressentr = document.querySelectorAll('[data-key="Addresse"] tbody tr')
+        var Addressentr = document.querySelectorAll('[data-key="Addressen"] tbody tr')
         if (Addressentr.length > 0) {
 
-            form.Addressen = [];
+            form.Adressen = [];
 
             Addressentr.forEach(ktr => {
-                form.Berufe.push({
+                form.Adressen.push({
                     Id: parseInt(ktr.querySelector('[name="Id"]').value),
                     Seit: app.convertISOToDINDate(ktr.querySelector('[name="Seit"]').value),
                     Ort: ktr.querySelector('[name="Ort"]').value,
@@ -323,7 +324,9 @@ app = Object.assign({
 
     kind_hinzufuegen: function (event) {
         event.preventDefault();
-        var viewbag = {};
+        var viewbag = {
+            Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Kinder"] tbody tr').length + 1
+        };
         viewbag.personOptionsHtml = app.get_person_options_html();
         var html = app.renderTemplate("person_details_Kinder", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Kinder"] tbody').innerHTML += html;
@@ -339,7 +342,9 @@ app = Object.assign({
     },
     partner_hinzufuegen : function (){
         event.preventDefault();
-        var viewbag = {};
+        var viewbag = {
+            Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Partner"] tbody tr').length + 1
+        };
         viewbag.personOptionsHtml = app.get_person_options_html();
         var html = app.renderTemplate("person_details_Partner", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Partner"] tbody').innerHTML += html;
@@ -355,7 +360,9 @@ app = Object.assign({
     },
     ereignisse_hinzufuegen: function () {
         event.preventDefault();
-        var viewbag = {};
+        var viewbag = {
+            Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Ereignisse"] tbody tr').length + 1
+        };
         var html = app.renderTemplate("person_details_Ereignisse", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Ereignisse"] tbody').innerHTML += html;
 
@@ -369,7 +376,9 @@ app = Object.assign({
     },
     berufe_hinzufuegen: function(){
         event.preventDefault();
-        var viewbag = {};
+        var viewbag = {
+            Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Berufe"] tbody tr').length + 1
+        };
         var html = app.renderTemplate("person_details_Berufe", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Berufe"] tbody').innerHTML += html;
 
@@ -383,7 +392,9 @@ app = Object.assign({
     },
     addressen_hinzufuegen: function(){
         event.preventDefault();
-        var viewbag = {};
+        var viewbag = {
+            Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Addressen"] tbody tr').length + 1
+        };
         var html = app.renderTemplate("person_details_Adressen", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Addressen"] tbody').innerHTML += html;
 

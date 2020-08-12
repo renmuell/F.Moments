@@ -13,6 +13,7 @@
     <link href="assets/css/table.css" rel="stylesheet" type="text/css">
 
     <link href="assets/css/person.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/liste.css" rel="stylesheet" type="text/css">
     <link href="assets/css/bild.css" rel="stylesheet" type="text/css">
     <link href="assets/css/familie.css" rel="stylesheet" type="text/css">
     <link href="assets/fontawesome/css/all.css" rel="stylesheet" type="text/css">
@@ -25,11 +26,13 @@
 
     <nav>
         <ul>
+            <li><a tabindex="1" href="." data-route="liste"><i class="fas fa-th-list"></i></a></li>
             <li><a tabindex="1" href="." data-route="personen"><i class="fas fa-users"></i></a></li>
             <li><a tabindex="1" href="." data-route="bilder"><i class="fas fa-images"></i></a></li>
             <li><a tabindex="1" href="." data-route="events"><i class="fas fa-calendar-alt"></i></a></li>
             <li><a tabindex="1" href="." data-route="timeline"><i class="fas fa-stream"></i></a></li>
             <li><a tabindex="1" href="." data-route="familie"><i class="fas fa-project-diagram"></i></a></li>
+
         </ul>
     </nav>
     <main>
@@ -191,6 +194,16 @@
         </section>
 
         <section data-tab="timeline">
+            <div>
+                <nav>
+                    <ul>
+                    </ul>
+                </nav>
+            </div>
+            <main></main>
+        </section>
+
+        <section data-tab="liste">
             <div>
                 <nav>
                     <ul>
@@ -583,13 +596,13 @@
 
     <script id="template_person_details_Adressen" type="text/template">
         <tr  data-addresse="%%Id%%">
-            <td style="width:100px"><input type="number" value="%%Id%%"></td>
-            <td><input type="date" value="%%Seit%%"></td>
-            <td><input type="text" value="%%Strasse%%"></td>
-            <td><input type="text" value="%%Nummer%%"></td>
-            <td><input type="text" value="%%Ort%%"></td>
-            <td><input type="text" value="%%Land%%"></td>
-            <td><input type="text" value="%%Note%%"></td>
+            <td style="width:100px"><input type="number" value="%%Id%%" name="Id"></td>
+            <td><input type="date" name="Seit" value="%%Seit%%"></td>
+            <td><input type="text" name="Strasse" value="%%Strasse%%"></td>
+            <td><input type="text" name="Nummer" value="%%Nummer%%"></td>
+            <td><input type="text" name="Ort" value="%%Ort%%"></td>
+            <td><input type="text" name="Land" value="%%Land%%"></td>
+            <td><input type="text" name="Note" value="%%Note%%"></td>
             <td>
                 <button data-delete="%%Id%%"><i class="fas fa-trash"></i></button>
             </td>
@@ -749,6 +762,7 @@
     <script src="assets/js/routes/personen_json.js"></script>
     <script src="assets/js/routes/timeline.js"></script>
     <script src="assets/js/routes/events.js"></script>
+    <script src="assets/js/routes/liste.js"></script>
     <script src="assets/js/routes/familie.js"></script>
     <script src="assets/js/routes/familie_graph_json.js"></script>
     <script>app.init()</script>
