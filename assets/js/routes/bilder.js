@@ -20,6 +20,10 @@ app = Object.assign({
         app.bindAll("click", '[data-tab="bilder"] nav .add_multi', app.bilder_add_multi);
     },
 
+    bilder_add_multi: function() {
+        app.changeRoute("add_multi_bilder")
+    },
+
     bilder_show_as_cards: function(){
         app.changeRoute("bilder", {
             view: "cards"
