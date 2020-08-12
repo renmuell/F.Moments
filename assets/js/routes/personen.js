@@ -39,6 +39,15 @@ app = Object.assign({
         var json = app.getStorageJson("json_personen")
         if (json && json.Personen) {
             json.Personen.forEach(json => {
+
+                if (typeof json.Bild === "undefined" || json.Bild == "") {
+                    if (json.Geschlecht == "Männlich") {
+                        json.Bild = "assets/img/familyGraph/man.png";
+                    } else {
+                        json.Bild = "assets/img/familyGraph/woman.png";
+                    }
+                }
+
                 innerHtml += app.renderTemplate("person_"+view, json);
             })
         }

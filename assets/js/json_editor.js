@@ -12,8 +12,10 @@ app = Object.assign({
     json_editor_bind: function(id) {
         app.bind("change", '#'+id+' input[type="file"]', app.json_editor_laod_change)
         app.bind("click", '#'+id+' button.download', app.json_editor_laod_change_download)
+        app.bind("click", '#'+id+' button.save', app.json_editor_laod_change_save)
         document.querySelector('#'+id+' input[type="file"]').dataset.json = id;
         document.querySelector('#'+id+' button.download').dataset.json = id;
+        document.querySelector('#'+id+' button.save').dataset.json = id;
     },
 
     json_editor_laod: function(id) {
@@ -43,6 +45,14 @@ app = Object.assign({
         event.preventDefault();
         let json = document.querySelector("#"+event.target.dataset.json+" textarea").value;
         app.downloadJson(json, event.target.dataset.json);
+        return false;
+    },
+
+    json_editor_laod_change_save: function (event) {
+        event.preventDefault();
+        let json = document.querySelector("#"+event.target.dataset.json+" textarea").value;
+        localStorage.setItem(event.target.dataset.json, json)
+        alert("Saved");
         return false;
     }
 

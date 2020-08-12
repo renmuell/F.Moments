@@ -16,6 +16,16 @@ app = Object.assign({
 
         person.personOptionsHtml = app.get_person_options_html();
 
+        if (typeof person.Bild === "undefined" || person.Bild == "") {
+            if (person.Geschlecht == "Männlich") {
+                person.HeaderBild = "assets/img/familyGraph/man.png";
+            } else {
+                person.HeaderBild = "assets/img/familyGraph/woman.png";
+            }
+        } else {
+            person.HeaderBild = person.Bild
+        }
+
         if (person.Kinder) {
             person.Kinder = person.Kinder.map(k => {
                 return {
