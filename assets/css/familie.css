@@ -1,14 +1,17 @@
-[data-tab="familie"] .marked {
-    border: 1px solid blue!important;
+[data-tab="familie"] nav ul {
+    width: max-content;
 }
-[data-tab="familie"] .drag {
+
+[data-tab="familie"] .marked img,
+[data-tab="familie"] .marked div {
+    border: 2px solid rgba(0,0,255,0.6) !important;
+}
+
+[data-tab="familie"] .drag img,
+[data-tab="familie"] .drag div {
     box-shadow: 0 0 10px rgba(0,0,0,.4)
 }
-/*
-#FamilieGraphBoard > div {
-    border: 1px solid rgba(0,0,0,.4);
-}
-*/
+
 [data-tab="familie"] .dotted {
     background-image: -webkit-repeating-radial-gradient(center center, rgba(0,0,0,.2), rgba(0,0,0,.2) 1px, transparent 1px, transparent 100%);
     background-image: -moz-repeating-radial-gradient(center center, rgba(0,0,0,.2), rgba(0,0,0,.2) 1px, transparent 1px, transparent 100%);
@@ -17,6 +20,5 @@
     -webkit-background-size: 50px 50px;
     -moz-background-size: 50px 50px;
     background-size: 50px 50px;
-    background-position: 25px 25px;
+    background-position: 25px 0;
 }
-

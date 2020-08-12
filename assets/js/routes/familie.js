@@ -27,10 +27,11 @@ app = Object.assign({
 
           , $personPlates: []
 
+          , touchMarking: false
+
           , init: function(){
                 if (app.FGAppInit) return;
 
-                document.addEventListener("touchmove", function(event){ event.preventDefault(); return false;}, false);
                 FGApp.loadJSON();
 
                 app.FGAppInit = true;
@@ -94,7 +95,6 @@ app = Object.assign({
                 FGApp.$GraphWrapper.style.height = '100%'
                 FGApp.$GraphWrapper.style.width = '100%'
                 FGApp.$GraphWrapper.style.overflow = 'scroll'
-                FGApp.$GraphWrapper.addEventListener("touchmove", function(event){ event.preventDefault(); return false;}, false);
                 document.querySelector('[data-tab="familie"] main').appendChild(FGApp.$GraphWrapper)
 
 
@@ -111,7 +111,6 @@ app = Object.assign({
                 FGApp.$GraphCanvas.width = parseInt(FGApp.PersonGraph.width)
                 FGApp.$GraphWrapper.appendChild(FGApp.$GraphCanvas)
 
-                //setDPI(FGApp.$GraphCanvas, 96/window.devicePixelRatio)
                 FGApp.Graph2dContext = document.getElementById(FGApp.$GraphCanvas.id).getContext('2d')
 
                 FGApp.$GraphBoard = document.createElement('div')
@@ -126,6 +125,99 @@ app = Object.assign({
                 FGApp.$GraphBoard.style.top = "0px"
                 FGApp.$GraphBoard.style.height = FGApp.PersonGraph.height
                 FGApp.$GraphBoard.style.width = FGApp.PersonGraph.width
+
+                var touchIdentifer = undefined;
+
+                function getOffsetPosition(evt, parent){
+                    var position = {
+                        x: (evt.targetTouches) ? evt.targetTouches[0].pageX : evt.clientX,
+                        y: (evt.targetTouches) ? evt.targetTouches[0].pageY : evt.clientY
+                    };
+
+                    while(parent.offsetParent){
+                        position.x -= parent.offsetLeft - parent.scrollLeft;
+                        position.y -= parent.offsetTop - parent.scrollTop;
+
+                        parent = parent.offsetParent;
+                    }
+
+                    return position;
+                }
+
+                FGApp.$GraphBoard.ontouchstart = function (e) {
+                    if (FGApp.touchMarking) {
+
+                        var touches = e.changedTouches;
+                        if (touches.length > 0) {
+                            var touch = touches[0];
+                            touchIdentifer = touch.identifier;
+
+                            FGApp.makierung = true;
+                            var position = getOffsetPosition(e, FGApp.$GraphBoard.parentElement)
+                            FGApp.makierungX = position.x
+                            FGApp.makierungY = position.y
+
+                            FGApp.$personPlates.forEach(x => x.className = "")
+                            FGApp.$personPlates.forEach(x => x.style.pointerEvents = "none")
+                            FGApp.draw()
+
+                            return false;
+                        }
+                    }
+                }
+
+                FGApp.$GraphBoard.ontouchmove = function (e) {
+                    if (FGApp.touchMarking) {
+                        var touches = e.changedTouches;
+                        var touch = Array.from(touches).find( t => t.identifier == touchIdentifer)
+                        if (touch) {
+
+                            if (FGApp.makierung){
+                                var position = getOffsetPosition(e, FGApp.$GraphBoard.parentElement)
+                                FGApp.makierungWidth = position.x - FGApp.makierungX
+                                FGApp.makierungHeight = position.y - FGApp.makierungY
+                                if (Math.random()*100 > 89)
+                                    FGApp.draw()
+                            }
+
+                            return false;
+                        }
+                    }
+                }
+
+                FGApp.$GraphBoard.ontouchend = FGApp.$GraphBoard.ontouchcancel = function () {
+                    FGApp.touchMarking = false;
+                    document.querySelector('[data-tab="familie"] nav .fa-vector-square').parentElement.style.background = "white"
+
+                    if (FGApp.makierung){
+
+                        if (FGApp.makierungWidth < 0) {
+                            FGApp.makierungWidth = FGApp.makierungWidth * -1
+                            FGApp.makierungX = FGApp.makierungX - FGApp.makierungWidth
+                        }
+
+                        if (FGApp.makierungHeight < 0) {
+                            FGApp.makierungHeight = FGApp.makierungHeight * -1
+                            FGApp.makierungY = FGApp.makierungY - FGApp.makierungHeight
+                        }
+
+                        FGApp.getAllPersonsInArea(
+                            FGApp.makierungX
+                          , FGApp.makierungY
+                          , FGApp.makierungX + FGApp.makierungWidth
+                          , FGApp.makierungY + FGApp.makierungHeight)
+                        .forEach(person => document.getElementById(person.Id).className = "marked")
+
+                        FGApp.$personPlates.forEach(x => x.style.pointerEvents = "auto")
+
+                        FGApp.makierung = false
+                        FGApp.makierungX = 0
+                        FGApp.makierungY = 0
+                        FGApp.makierungWidth = 0
+                        FGApp.makierungHeight = 0
+                        FGApp.draw()
+                    }
+                }
 
                 FGApp.$GraphBoard.onmousedown = function (event){
                     if (event.which === 1) {
@@ -184,11 +276,11 @@ app = Object.assign({
 
                 FGApp.$GraphWrapper.appendChild(FGApp.$GraphBoard)
 
-                FGApp.addButtonToMenu("Get Grap Json", function(){
+                FGApp.addButtonToMenu('<i class="fas fa-save"></i>', function(){
                     FGApp.createPersonGraphJson()
                 })
 
-                FGApp.addButtonToMenu("Align Marked Horizontal", function(){
+                FGApp.addButtonToMenu('<i class="fas fa-ellipsis-h"></i>', function(){
                     var maxY,minY, centerY
 
                     document.querySelectorAll('.marked')
@@ -215,7 +307,7 @@ app = Object.assign({
 
                 var colorPicker = FGApp.addColorPickerToMenu()
 
-                FGApp.addButtonToMenu("Color Marked", function(){
+                FGApp.addButtonToMenu('<i class="fas fa-paint-brush"></i>', function(){
                     document.querySelectorAll('.marked')
                     .forEach(function(elm){
                         elm.setAttribute('data-color', colorPicker.value)
@@ -224,7 +316,7 @@ app = Object.assign({
                     })
                 })
 
-                FGApp.addButtonToMenu("Save Images", function(){
+                FGApp.addButtonToMenu('<i class="fas fa-camera"></i>', function(){
                     var backupWidth = FGApp.$GraphWrapper.style.width
                     var backupHeight = FGApp.$GraphWrapper.style.height
                     FGApp.$GraphWrapper.style.width = FGApp.$GraphBoard.style.width
@@ -249,8 +341,16 @@ app = Object.assign({
                       }
                     });
                 })
-           }
 
+                FGApp.addButtonToMenu('<i class="fas fa-vector-square"></i> <i class="fas fa-hand-point-up"></i>', function(event){
+                    FGApp.touchMarking = !FGApp.touchMarking;
+                    if (FGApp.touchMarking) {
+                        event.srcElement.style.background = "lightblue"
+                    } else {
+                        event.srcElement.style.background = "white"
+                    }
+                })
+           }
           , addButtonToMenu: function(text, clickCallback){
                 let button = document.createElement('button')
 
@@ -373,16 +473,6 @@ app = Object.assign({
           , drawLineFromPersonToPerson(person1, person2, person1XOffset, person1YOffset, person2XOffset, person2YOffset) {
 
                 if (person1 && person2) {
-                   /*FGApp.Graph2dContext.beginPath();
-                   FGApp.Graph2dContext.strokeStyle = FGApp.PersonGraph.positions[person2.Id].color;
-                   FGApp.Graph2dContext.moveTo(
-                     parseInt(FGApp.PersonGraph.positions[person1.Id].left) + person1XOffset
-                   , parseInt(FGApp.PersonGraph.positions[person1.Id].top) + person1YOffset)
-
-                   FGApp.Graph2dContext.lineTo(
-                     parseInt(FGApp.PersonGraph.positions[person2.Id].left) + person2XOffset
-                   , parseInt(FGApp.PersonGraph.positions[person2.Id].top) + person2YOffset)
-                   FGApp.Graph2dContext.stroke();*/
 
                    FGApp.drawCurve(
                      parseInt(FGApp.PersonGraph.positions[person1.Id].left) + person1XOffset
@@ -428,10 +518,6 @@ app = Object.assign({
                 $personPlate.style.width = FGApp.personWidth + 'px'
                 $personPlate.style.height = FGApp.personHeiht + 'px'
                 $personPlate.style.position = 'absolute'
-                //$personPlate.style.border = "2px solid "+ FGApp.PersonGraph.positions[person.Id].color
-                //$personPlate.style.borderRadius = "10px"
-                //$personPlate.style.backgroundColor = "white"
-
 
                 $personPlate.setAttribute(
                     'data-color'
@@ -441,6 +527,58 @@ app = Object.assign({
                      $personPlate
                    , parseInt(FGApp.PersonGraph.positions[person.Id].left)
                    , parseInt(FGApp.PersonGraph.positions[person.Id].top))
+
+
+                let touchIdentifer = undefined;
+                let original_x = 0;
+                let original_y = 0;
+                let original_mouse_x = 0;
+                let original_mouse_y = 0;
+
+                $personPlate.ontouchstart = function (e) {
+                    e.preventDefault();
+                    var touches = e.changedTouches;
+                    if (touches.length > 0) {
+                        var touch = touches[0];
+                        touchIdentifer = touch.identifier;
+                        original_x = parseFloat($personPlate.style.left);
+                        original_y = parseFloat($personPlate.style.top);
+                        original_mouse_x = touch.pageX;
+                        original_mouse_y = touch.pageY;
+                        window.addEventListener('touchmove', touchmove, { passive: false })
+                        window.addEventListener('touchend', touchend)
+                        window.addEventListener('touchcancel', touchend)
+                    }
+                    return false;
+                }
+
+                function touchmove (e) {
+
+                    e.preventDefault();
+                    var touches = e.changedTouches;
+                    var touch = Array.from(touches).find( t => t.identifier == touchIdentifer)
+                    if (touch) {
+                        var left =  original_x + (touch.pageX - original_mouse_x);
+                        var top = original_y + (touch.pageY - original_mouse_y) ;
+
+                        var deltaX = parseInt($personPlate.style.left) - left;
+                        var deltaY = parseInt($personPlate.style.top) - top;
+
+                        FGApp.setPersonPlate($personPlate, left, top)
+                        document.querySelectorAll('.marked').forEach(function(elm){
+                          FGApp.setPersonPlate(elm, parseInt(elm.style.left) - deltaX, parseInt(elm.style.top) - deltaY)
+                        })
+
+                    }
+                    return false;
+                }
+
+                function touchend () {
+                    FGApp.draw()
+                    window.removeEventListener('touchmove', touchmove)
+                    window.removeEventListener('touchend', touchend)
+                    window.removeEventListener('touchcancel', touchend)
+                }
 
                 $personPlate.onmousedown = function(event){
                     if (event.which === 1){
@@ -583,7 +721,8 @@ app = Object.assign({
             }
 
           , createPersonGraphJson: function (){
-                FGApp.saveToJsonDatei("personenGraph", JSON.stringify(FGApp.PersonGraph))
+                localStorage.setItem("json_familie_graph", JSON.stringify(FGApp.PersonGraph));
+                alert("Saved")
             }
           , saveToJsonDatei: function(name, content) {
                 var blob = new Blob([content], {type: "application/json;charset=utf-8"});
