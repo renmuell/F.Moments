@@ -187,10 +187,10 @@ app = Object.assign({
         var Partnertr = document.querySelectorAll('[data-key="Partner"] tbody tr')
         if (Partnertr.length > 0) {
 
-            form.Pratner = [];
+            form.Partner = [];
 
             Partnertr.forEach(ktr => {
-                form.Pratner.push({
+                form.Partner.push({
                     Id: parseInt(ktr.querySelector('[name="Id"]').value),
                     Von: app.convertISOToDINDate(ktr.querySelector('[name="Von"]').value),
                     Bis: app.convertISOToDINDate(ktr.querySelector('[name="Bis"]').value),
