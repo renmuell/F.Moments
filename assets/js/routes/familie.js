@@ -576,8 +576,6 @@ app = Object.assign({
                 function touchend () {
                     FGApp.draw()
                     window.removeEventListener('touchmove', touchmove)
-                    window.removeEventListener('touchend', touchend)
-                    window.removeEventListener('touchcancel', touchend)
                 }
 
                 $personPlate.onmousedown = function(event){
