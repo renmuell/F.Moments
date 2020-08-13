@@ -9,10 +9,6 @@ app = Object.assign({
         let id = app.getRouteData("id");
         app.bild_render(id);
 
-        app.bild_canvas_start = false;
-        app.bild_canvas_persons = [];
-        app.bild_canvas_persons_drawing = undefined;
-
         app.bindAll("click", '[data-tab="bild"] nav .save', app.save_bild);
         app.bindAll("click", '[data-tab="bild"] nav .delete', app.delete_bild);
         app.bindAll("click", '[data-tab="bild"] nav .zoom_with', app.zoom_with);
@@ -28,25 +24,76 @@ app = Object.assign({
 
         app.bind("load", '[data-tab="bild"] main .image-container img', app.bild_img_loaded)
 
-        app.bind("mousedown", '[data-tab="bild"] main .image-container canvas', app.bild_mousedown)
-        app.bind("mousemove", '[data-tab="bild"] main .image-container canvas', app.bild_mousemove)
-        app.bind("mouseup", '[data-tab="bild"] main .image-container canvas', app.bild_mouseup)
+        app.bild_canvas_start = false;
+        app.bild_canvas_persons_drawing = undefined;
 
-        app.bind("touchstart", '[data-tab="bild"] main .image-container canvas', app.bild_touchstart)
-        app.bind("touchmove", '[data-tab="bild"] main .image-container canvas', app.bild_touchmove)
-        app.bind("touchend", '[data-tab="bild"] main .image-container canvas', app.bild_mouseup)
-        app.bind("touchcancel", '[data-tab="bild"] main .image-container canvas', app.bild_mouseup)
+        app.inputMoveElementInit(
+            document.querySelector('[data-tab="bild"] main .image-container canvas'),
+            function (e) {
+                app.bild_canvas_start = true;
+                e.setLayerXY()
+                app.bild_canvas_persons_drawing = {
+                    x_start: e.layerX,
+                    y_start: e.layerY,
+                    x_end: e.layerX,
+                    y_end: e.layerY,
+                };
+            },
+            function (e) {
+                if (app.bild_canvas_start) {
+                    e.setLayerXY()
+                    app.bild_canvas_persons_drawing.x_end = e.layerX
+                    app.bild_canvas_persons_drawing.y_end = e.layerY
+                }
+                app.bild_canvas_draw();
+            },
+            function () {
+                if (app.bild_canvas_persons_drawing) {
+                    var x, y = 0;
+
+                    if (app.bild_canvas_persons_drawing.x_start > app.bild_canvas_persons_drawing.x_end) {
+                        x = app.bild_canvas_persons_drawing.x_end
+                    } else {
+                        x = app.bild_canvas_persons_drawing.x_start
+                    }
+
+                    if (app.bild_canvas_persons_drawing.y_start > app.bild_canvas_persons_drawing.y_end) {
+                        y = app.bild_canvas_persons_drawing.y_end
+                    } else {
+                        y = app.bild_canvas_persons_drawing.y_start
+                    }
+
+                    var width = height = 0;
+
+                    width = Math.abs(app.bild_canvas_persons_drawing.x_start - app.bild_canvas_persons_drawing.x_end)
+                    height = Math.abs(app.bild_canvas_persons_drawing.y_start - app.bild_canvas_persons_drawing.y_end)
+
+                    var newId = "0_" + Math.floor(Math.random()*10000)
+                    var name = "?"
+                    app.createMarkedBox(
+                        newId,
+                        name,
+                        x,
+                        y,
+                        width,
+                        height
+                    )
+
+                    app.bild_person_hinzufuegen(new Event('Add Person'), newId, x, y, width, height);
+
+                    app.bild_canvas_start = false;
+                    app.bild_canvas_persons_drawing = undefined;
+                    document.querySelector('[data-tab="bild"] main .image-container canvas').style.display = "none";
+                    app.bild_canvas_draw();
+                }
+            },
+            "inputMoveElementInit_canvas"
+        )
 
         document.querySelector('[data-tab="bild"] main .image-container canvas').style.display = "none";
 
         app.bild_canvas = document.querySelector('[data-tab="bild"] main .image-container canvas');
         app.bild_canvas_context = document.querySelector('[data-tab="bild"] main .image-container canvas').getContext("2d");
-
-
-        if (typeof app.bild_canvas_is_running == "undefined") {
-            app.bild_canvas_run();
-            app.bild_canvas_is_running = true;
-        }
 
         app.bind("click", '[data-tab="bild"] form table[data-key="Personen"] tfoot button', app.add_person_marker)
         app.bindAll("click", '[data-tab="bild"] form table[data-key="Personen"] tbody button[data-delete]', app.bild_person_entfernen)
@@ -284,8 +331,7 @@ app = Object.assign({
         return false;
     },
 
-    bild_canvas_run: function () {
-        requestAnimationFrame(app.bild_canvas_run);
+    bild_canvas_draw: function () {
         app.bild_canvas_context.clearRect(0, 0, app.bild_canvas.width, app.bild_canvas.height);
 
         if (app.bild_canvas_persons_drawing) {
@@ -297,17 +343,6 @@ app = Object.assign({
                 app.bild_canvas_persons_drawing.y_end - app.bild_canvas_persons_drawing.y_start,
             );
         }
-
-        app.bild_canvas_persons.forEach(function(box){
-            app.bild_canvas_context.fillStyle = "#0000FF";
-            app.bild_canvas_context.fillRect(
-                box.x,
-                box.y,
-                box.width,
-                box.height,
-            );
-        })
-
     },
 
     bild_img_loaded: function () {
@@ -318,117 +353,6 @@ app = Object.assign({
         var m = document.querySelector('[data-tab="bild"] main .image-container .markers')
         m.style.width = img.clientWidth + "px"
         m.style.height=  img.clientHeight+ "px"
-    },
-
-    bild_get_touch_layerXY (evt) {
-        var el = evt.target,
-            x = 0,
-            y = 0;
-
-        while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-          x += el.offsetLeft - el.scrollLeft;
-          y += el.offsetTop - el.scrollTop;
-          el = el.offsetParent;
-        }
-
-        x = evt.clientX - x;
-        y = evt.clientY - y;
-
-        return { x: x, y: y };
-    },
-
-    bild_touch_identifer: undefined,
-    bild_touchstart: function(e) {
-        e.preventDefault();
-        var touches = e.changedTouches;
-        if (touches.length > 0) {
-            var touch = touches[0];
-            app.bild_touch_identifer = touch.identifier;
-            app.bild_canvas_start = true;
-
-            layerXY = app.bild_get_touch_layerXY(touch);
-
-            app.bild_canvas_persons_drawing = {
-                x_start: layerXY.x,
-                y_start: layerXY.y,
-                x_end: layerXY.x,
-                y_end: layerXY.y,
-            };
-        }
-        return false;
-    },
-
-    bild_touchmove: function (e) {
-        e.preventDefault();
-        var touches = e.changedTouches;
-        var touch = Array.from(touches).find( t => t.identifier == app.bild_touch_identifer)
-        if (touch) {
-            if (app.bild_canvas_start && Math.random() > 0.8) {
-                layerXY = app.bild_get_touch_layerXY(touch);
-                app.bild_canvas_persons_drawing.x_end = layerXY.x
-                app.bild_canvas_persons_drawing.y_end = layerXY.y
-            }
-        }
-        return false;
-    },
-
-    bild_mousedown: function (event) {
-        if (event.which == 1) {
-            app.bild_canvas_start = true;
-            app.bild_canvas_persons_drawing = {
-                x_start: event.layerX,
-                y_start: event.layerY,
-                x_end: event.layerX,
-                y_end: event.layerY,
-            };
-        }
-    },
-
-    bild_mousemove: function (event) {
-        if (event.which == 1) {
-            if (app.bild_canvas_start && Math.random() > 0.8) {
-                app.bild_canvas_persons_drawing.x_end = event.layerX
-                app.bild_canvas_persons_drawing.y_end = event.layerY
-            }
-        }
-    },
-
-    bild_mouseup: function () {
-        var x, y = 0;
-
-        if (app.bild_canvas_persons_drawing.x_start > app.bild_canvas_persons_drawing.x_end) {
-            x = app.bild_canvas_persons_drawing.x_end
-        } else {
-            x = app.bild_canvas_persons_drawing.x_start
-        }
-
-        if (app.bild_canvas_persons_drawing.y_start > app.bild_canvas_persons_drawing.y_end) {
-            y = app.bild_canvas_persons_drawing.y_end
-        } else {
-            y = app.bild_canvas_persons_drawing.y_start
-        }
-
-        var width = height = 0;
-
-        width = Math.abs(app.bild_canvas_persons_drawing.x_start - app.bild_canvas_persons_drawing.x_end)
-        height = Math.abs(app.bild_canvas_persons_drawing.y_start - app.bild_canvas_persons_drawing.y_end)
-
-        var newId = app.bild_canvas_persons.length + "_" + Math.floor(Math.random()*10000)
-        var name = "?"
-        app.createMarkedBox(
-            newId,
-            name,
-            x,
-            y,
-            width,
-            height
-        )
-
-        app.bild_person_hinzufuegen(new Event('Add Person'), newId, x, y, width, height);
-
-        app.bild_canvas_start = false;
-        app.bild_canvas_persons_drawing = undefined;
-        document.querySelector('[data-tab="bild"] main .image-container canvas').style.display = "none";
     },
 
     bild_person_hinzufuegen: function (event, id, x, y, width, height) {
@@ -512,121 +436,33 @@ app = Object.assign({
         const resizers = element.querySelectorAll('.resizer')
         const minimum_size = 20;
 
-        let touchIdentifer = undefined;
         let original_width = 0;
         let original_height = 0;
-        let original_x = 0;
-        let original_y = 0;
-        let original_mouse_x = 0;
-        let original_mouse_y = 0;
 
-        element.addEventListener("touchstart", function(e){
-            e.preventDefault();
-            var touches = e.changedTouches;
-            if (touches.length > 0) {
-                var touch = touches[0];
-                touchIdentifer = touch.identifier;
-                original_x = parseFloat(element.style.left);
-                original_y = parseFloat(element.style.top);
-                original_mouse_x = touch.pageX;
-                original_mouse_y = touch.pageY;
-                window.addEventListener('touchmove', touchmove, { passive: false })
-                window.addEventListener('touchend', touchend)
-                window.addEventListener('touchcancel', touchend)
+        app.inputMoveElementInit(
+            element,
+            function(){},
+            function(e){
+                element.style.left = e.newTargetX + "px";
+                element.style.top  = e.newTargetY + "px";
+                app.bild_set_person_data(element.dataset.id, "X", e.newTargetX);
+                app.bild_set_person_data(element.dataset.id, "Y", e.newTargetY);
             }
-            return false;
-        })
-
-        function touchmove (e) {
-            e.preventDefault();
-            var touches = e.changedTouches;
-            var touch = Array.from(touches).find( t => t.identifier == touchIdentifer)
-            if (touch && touch.target.classList.contains('resizable')) {
-                var left =  original_x + (touch.pageX - original_mouse_x);
-                var top = original_y + (touch.pageY - original_mouse_y) ;
-
-                element.style.left =left + 'px'
-                element.style.top = top+ 'px'
-
-                app.bild_set_person_data(element.dataset.id, "X", left)
-                app.bild_set_person_data(element.dataset.id, "Y", top)
-            }
-            return false;
-        }
-
-        function touchend () {
-            window.removeEventListener('touchmove', touchmove)
-        }
-
-        element.addEventListener("mousedown", function(e) {
-            if (e.which == 1) {
-                e.preventDefault()
-                if (e.target.classList.contains('resizable')) {
-                    original_x = parseFloat(element.style.left);
-                    original_y = parseFloat(element.style.top);
-                    original_mouse_x = e.pageX;
-                    original_mouse_y = e.pageY;
-                    window.addEventListener('mousemove', move)
-                    window.addEventListener('mouseup', stopMove)
-                }
-
-                return false;
-            }
-        })
-
-        function move (e) {
-            if (e.which == 1) {
-                e.preventDefault();
-
-                var left =  original_x + (e.pageX - original_mouse_x);
-                var top = original_y + (e.pageY - original_mouse_y) ;
-
-                element.style.left =left + 'px'
-                element.style.top = top+ 'px'
-
-                app.bild_set_person_data(element.dataset.id, "X", left)
-                app.bild_set_person_data(element.dataset.id, "Y", top)
-            }
-        }
-
-        function stopMove () {
-            window.removeEventListener('mousemove', move)
-        }
+        );
 
         for (let i = 0;i < resizers.length; i++) {
             const currentResizer = resizers[i];
 
-
-            currentResizer.addEventListener('touchstart', function(e){
-                e.preventDefault();
-                var touches = e.changedTouches;
-                if (touches.length > 0) {
-                    var touch = touches[0];
-                    touchIdentifer = touch.identifier;
-                    if (touch.target.classList.contains("resizer")) {
-                        original_width = parseFloat(getComputedStyle(element, null).getPropertyValue('width').replace('px', ''));
-                        original_height = parseFloat(getComputedStyle(element, null).getPropertyValue('height').replace('px', ''));
-                        original_x = parseFloat(element.style.left);
-                        original_y = parseFloat(element.style.top);
-                        original_mouse_x = touch.pageX;
-                        original_mouse_y = touch.pageY;
-                        window.addEventListener('touchmove', touchresize, { passive: false })
-                        window.addEventListener('touchend', touchstopResize)
-                        window.addEventListener('touchcancel', touchstopResize)
-                    }
-                }
-                return false;
-            })
-
-            function touchresize (e) {
-                e.preventDefault();
-                var touches = e.changedTouches;
-                var touch = Array.from(touches).find( t => t.identifier == touchIdentifer)
-                if (touch) {
-
+            app.inputMoveElementInit(
+                element,
+                function(){
+                    original_width = parseInt(element.currentStyle.width);
+                    original_height = parseInt( element.currentStyle.height);
+                },
+                function(e){
                     if (currentResizer.classList.contains('bottom-right')) {
-                        const width = original_width + (touch.pageX - original_mouse_x);
-                        const height = original_height + (touch.pageY - original_mouse_y)
+                        const width = original_width + e.deltaX;
+                        const height = original_height + e.deltaY;
                         if (width > minimum_size) {
                             element.style.width = width + 'px'
                             app.bild_set_person_data(element.dataset.id, "Width", width)
@@ -635,91 +471,22 @@ app = Object.assign({
                             element.style.height = height + 'px'
                             app.bild_set_person_data(element.dataset.id, "Height", height)
                         }
-                    }
-                    else if (currentResizer.classList.contains('bottom-left')) {
-                        const height = original_height + (touch.pageY - original_mouse_y)
-                        const width = original_width - (touch.pageX - original_mouse_x)
+                    } else if (currentResizer.classList.contains('bottom-left')) {
+                        const height = original_height + e.deltaY;
+                        const width = original_width - e.deltaX;
                         if (height > minimum_size) {
                             element.style.height = height + 'px'
                             app.bild_set_person_data(element.dataset.id, "Height", height)
-                         }
-                        if (width > minimum_size) {
-                            let newleft = original_x + (touch.pageX - original_mouse_x);
-                            element.style.width = width + 'px'
-                            element.style.left = newleft + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Width", width)
-                            app.bild_set_person_data(element.dataset.id, "X", newleft)
                         }
-                    }
-                    else if (currentResizer.classList.contains('top-right')) {
-                        const width = original_width + (touch.pageX - original_mouse_x)
-                        const height = original_height - (touch.pageY - original_mouse_y)
                         if (width > minimum_size) {
                             element.style.width = width + 'px'
+                            element.style.left = e.newTargetX + 'px'
                             app.bild_set_person_data(element.dataset.id, "Width", width)
-                       }
-                        if (height > minimum_size) {
-                            let newtop = original_y + (touch.pageY - original_mouse_y)
-                            element.style.height = height + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Height", height)
-                            element.style.top = newtop + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Y", newtop)
+                            app.bild_set_person_data(element.dataset.id, "X", e.newTargetX)
                         }
-                    }
-                    else {
-                        const width = original_width - (touch.pageX - original_mouse_x)
-                        const height = original_height - (touch.pageY - original_mouse_y)
-                        if (width > minimum_size) {
-                            let newleft = original_x + (touch.pageX - original_mouse_x);
-                            element.style.width = width + 'px'
-                            element.style.left = newleft + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Width", width)
-                            app.bild_set_person_data(element.dataset.id, "X", newleft)
-                          }
-                        if (height > minimum_size) {
-                            let newtop = original_y + (touch.pageY - original_mouse_y)
-                            element.style.height = height + 'px'
-                            element.style.top = newtop + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Height", height)
-                            app.bild_set_person_data(element.dataset.id, "Y", newtop)
-                        }
-                    }
-
-                }
-                return false;
-            }
-
-            function touchstopResize () {
-                window.removeEventListener('touchmove', touchresize)
-            }
-
-            currentResizer.addEventListener('mousedown', function(e) {
-
-                if (e.which == 1) {
-
-                    e.preventDefault()
-
-                    if (e.target.classList.contains("resizer")) {
-                        original_width = parseFloat(getComputedStyle(element, null).getPropertyValue('width').replace('px', ''));
-                        original_height = parseFloat(getComputedStyle(element, null).getPropertyValue('height').replace('px', ''));
-                        original_x = parseFloat(element.style.left);
-                        original_y = parseFloat(element.style.top);
-                        original_mouse_x = e.pageX;
-                        original_mouse_y = e.pageY;
-                        window.addEventListener('mousemove', resize)
-                        window.addEventListener('mouseup', stopResize)
-                    }
-
-                    return false;
-                }
-            })
-
-            function resize(e) {
-                if (e.which == 1) {
-                    e.preventDefault()
-                    if (currentResizer.classList.contains('bottom-right')) {
-                        const width = original_width + (e.pageX - original_mouse_x);
-                        const height = original_height + (e.pageY - original_mouse_y)
+                    } else if (currentResizer.classList.contains('top-right')) {
+                        const width = original_width + e.deltaX;
+                        const height = original_height - e.deltaY;
                         if (width > minimum_size) {
                             element.style.width = width + 'px'
                             app.bild_set_person_data(element.dataset.id, "Width", width)
@@ -727,62 +494,30 @@ app = Object.assign({
                         if (height > minimum_size) {
                             element.style.height = height + 'px'
                             app.bild_set_person_data(element.dataset.id, "Height", height)
+                            element.style.top = e.newTargetY + 'px'
+                            app.bild_set_person_data(element.dataset.id, "Y", e.newTargetY)
                         }
-                    }
-                    else if (currentResizer.classList.contains('bottom-left')) {
-                        const height = original_height + (e.pageY - original_mouse_y)
-                        const width = original_width - (e.pageX - original_mouse_x)
-                        if (height > minimum_size) {
-                            element.style.height = height + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Height", height)
-                         }
-                        if (width > minimum_size) {
-                            let newleft = original_x + (e.pageX - original_mouse_x);
-                            element.style.width = width + 'px'
-                            element.style.left = newleft + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Width", width)
-                            app.bild_set_person_data(element.dataset.id, "X", newleft)
-                        }
-                    }
-                    else if (currentResizer.classList.contains('top-right')) {
-                        const width = original_width + (e.pageX - original_mouse_x)
-                        const height = original_height - (e.pageY - original_mouse_y)
+                    } else {
+                        const width = original_width - e.deltaX;
+                        const height = original_height - e.deltaY;
                         if (width > minimum_size) {
                             element.style.width = width + 'px'
+                            element.style.left = e.newTargetX + 'px'
                             app.bild_set_person_data(element.dataset.id, "Width", width)
-                       }
+                            app.bild_set_person_data(element.dataset.id, "X", e.newTargetX)
+                        }
                         if (height > minimum_size) {
-                            let newtop = original_y + (e.pageY - original_mouse_y)
                             element.style.height = height + 'px'
+                            element.style.top = e.newTargetY + 'px'
                             app.bild_set_person_data(element.dataset.id, "Height", height)
-                            element.style.top = newtop + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Y", newtop)
+                            app.bild_set_person_data(element.dataset.id, "Y", e.newTargetY)
                         }
                     }
-                    else {
-                        const width = original_width - (e.pageX - original_mouse_x)
-                        const height = original_height - (e.pageY - original_mouse_y)
-                        if (width > minimum_size) {
-                            let newleft = original_x + (e.pageX - original_mouse_x);
-                            element.style.width = width + 'px'
-                            element.style.left = newleft + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Width", width)
-                            app.bild_set_person_data(element.dataset.id, "X", newleft)
-                          }
-                        if (height > minimum_size) {
-                            let newtop = original_y + (e.pageY - original_mouse_y)
-                            element.style.height = height + 'px'
-                            element.style.top = newtop + 'px'
-                            app.bild_set_person_data(element.dataset.id, "Height", height)
-                            app.bild_set_person_data(element.dataset.id, "Y", newtop)
-                        }
-                    }
-                }
-            }
-
-            function stopResize() {
-                window.removeEventListener('mousemove', resize)
-            }
+                },
+                function(){},
+                "inputMoveElementInitResizer",
+                currentResizer
+            );
         }
     },
 

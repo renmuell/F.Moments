@@ -126,153 +126,68 @@ app = Object.assign({
                 FGApp.$GraphBoard.style.height = FGApp.PersonGraph.height
                 FGApp.$GraphBoard.style.width = FGApp.PersonGraph.width
 
-                var touchIdentifer = undefined;
-
-                function getOffsetPosition(evt, parent){
-                    var position = {
-                        x: (evt.targetTouches) ? evt.targetTouches[0].pageX : evt.clientX,
-                        y: (evt.targetTouches) ? evt.targetTouches[0].pageY : evt.clientY
-                    };
-
-                    while(parent.offsetParent){
-                        position.x -= parent.offsetLeft - parent.scrollLeft;
-                        position.y -= parent.offsetTop - parent.scrollTop;
-
-                        parent = parent.offsetParent;
-                    }
-
-                    return position;
-                }
-
-                FGApp.$GraphBoard.ontouchstart = function (e) {
-                    if (FGApp.touchMarking) {
-
-                        var touches = e.changedTouches;
-                        if (touches.length > 0) {
-                            var touch = touches[0];
-                            touchIdentifer = touch.identifier;
-
-                            FGApp.makierung = true;
-                            var position = getOffsetPosition(e, FGApp.$GraphBoard.parentElement)
-                            FGApp.makierungX = position.x
-                            FGApp.makierungY = position.y
-
-                            FGApp.$personPlates.forEach(x => x.className = "")
-                            FGApp.$personPlates.forEach(x => x.style.pointerEvents = "none")
-                            FGApp.draw()
-
-                            return false;
-                        }
-                    }
-                }
-
-                FGApp.$GraphBoard.ontouchmove = function (e) {
-                    if (FGApp.touchMarking) {
-                        var touches = e.changedTouches;
-                        var touch = Array.from(touches).find( t => t.identifier == touchIdentifer)
-                        if (touch) {
-
-                            if (FGApp.makierung){
-                                var position = getOffsetPosition(e, FGApp.$GraphBoard.parentElement)
-                                FGApp.makierungWidth = position.x - FGApp.makierungX
-                                FGApp.makierungHeight = position.y - FGApp.makierungY
-                                if (Math.random()*100 > 89)
-                                    FGApp.draw()
-                            }
-
-                            return false;
-                        }
-                    }
-                }
-
-                FGApp.$GraphBoard.ontouchend = FGApp.$GraphBoard.ontouchcancel = function () {
-                    FGApp.touchMarking = false;
-                    document.querySelector('[data-tab="familie"] nav .fa-vector-square').parentElement.style.background = "white"
-
-                    if (FGApp.makierung){
-
-                        if (FGApp.makierungWidth < 0) {
-                            FGApp.makierungWidth = FGApp.makierungWidth * -1
-                            FGApp.makierungX = FGApp.makierungX - FGApp.makierungWidth
-                        }
-
-                        if (FGApp.makierungHeight < 0) {
-                            FGApp.makierungHeight = FGApp.makierungHeight * -1
-                            FGApp.makierungY = FGApp.makierungY - FGApp.makierungHeight
-                        }
-
-                        FGApp.getAllPersonsInArea(
-                            FGApp.makierungX
-                          , FGApp.makierungY
-                          , FGApp.makierungX + FGApp.makierungWidth
-                          , FGApp.makierungY + FGApp.makierungHeight)
-                        .forEach(person => document.getElementById(person.Id).className = "marked")
-
-                        FGApp.$personPlates.forEach(x => x.style.pointerEvents = "auto")
-
-                        FGApp.makierung = false
-                        FGApp.makierungX = 0
-                        FGApp.makierungY = 0
-                        FGApp.makierungWidth = 0
-                        FGApp.makierungHeight = 0
-                        FGApp.draw()
-                    }
-                }
-
-                FGApp.$GraphBoard.onmousedown = function (event){
-                    if (event.which === 1) {
-                        FGApp.makierung = true;
-                        FGApp.makierungX = event.offsetX
-                        FGApp.makierungY = event.offsetY
-                        FGApp.$personPlates.forEach(x => x.className = "")
-                        FGApp.$personPlates.forEach(x => x.style.pointerEvents = "none")
-                        FGApp.draw()
-                    }
-                }
-
                 FGApp.Graph2dContext.strokeStyle = 'rgba(0,0,255,0.1)';
                 FGApp.Graph2dContext.fillStyle = 'rgba(0,0,255,0.1)';
                 FGApp.Graph2dContext.lineWidth = 1
                 FGApp.Graph2dContext.lineCap="round";
-                FGApp.$GraphBoard.onmousemove = function(event){
-                    if (FGApp.makierung){
-                        FGApp.makierungWidth = event.offsetX - FGApp.makierungX
-                        FGApp.makierungHeight = event.offsetY - FGApp.makierungY
-                        if (Math.random()*100 > 89)
+
+                app.inputMoveElementInit(
+                    FGApp.$GraphBoard,
+                    function (e) {
+                        if (FGApp.touchMarking) {
+                            FGApp.makierung = true;
+
+                            e.setLayerXY()
+                            FGApp.makierungX = e.layerX
+                            FGApp.makierungY = e.layerY
+
+                            FGApp.$personPlates.forEach(x => x.classList.remove("marked"))
+                            //FGApp.$personPlates.forEach(x => x.style.pointerEvents = "none")
+
                             FGApp.draw()
-                    }
-                }
-
-                FGApp.$GraphBoard.onmouseup = function(event){
-                    if (FGApp.makierung){
-
-                        if (FGApp.makierungWidth < 0) {
-                            FGApp.makierungWidth = FGApp.makierungWidth * -1
-                            FGApp.makierungX = FGApp.makierungX - FGApp.makierungWidth
                         }
-
-                        if (FGApp.makierungHeight < 0) {
-                            FGApp.makierungHeight = FGApp.makierungHeight * -1
-                            FGApp.makierungY = FGApp.makierungY - FGApp.makierungHeight
+                    },
+                    function (e) {
+                        if (FGApp.makierung){
+                            e.setLayerXY()
+                            FGApp.makierungWidth = e.layerX - FGApp.makierungX
+                            FGApp.makierungHeight = e.layerY - FGApp.makierungY
+                            FGApp.draw()
                         }
+                    },
+                    function () {
+                        FGApp.touchMarking = false;
+                        document.querySelector('[data-tab="familie"] nav .fa-vector-square').parentElement.style.background = "white"
 
-                        FGApp.getAllPersonsInArea(
-                            FGApp.makierungX
-                          , FGApp.makierungY
-                          , FGApp.makierungX + FGApp.makierungWidth
-                          , FGApp.makierungY + FGApp.makierungHeight)
-                        .forEach(person => document.getElementById(person.Id).className = "marked")
+                        if (FGApp.makierung){
 
-                        FGApp.$personPlates.forEach(x => x.style.pointerEvents = "auto")
+                            if (FGApp.makierungWidth < 0) {
+                                FGApp.makierungWidth = FGApp.makierungWidth * -1
+                                FGApp.makierungX = FGApp.makierungX - FGApp.makierungWidth
+                            }
 
-                        FGApp.makierung = false
-                        FGApp.makierungX = 0
-                        FGApp.makierungY = 0
-                        FGApp.makierungWidth = 0
-                        FGApp.makierungHeight = 0
-                        FGApp.draw()
-                    }
-                }
+                            if (FGApp.makierungHeight < 0) {
+                                FGApp.makierungHeight = FGApp.makierungHeight * -1
+                                FGApp.makierungY = FGApp.makierungY - FGApp.makierungHeight
+                            }
+
+                            FGApp.getAllPersonsInArea(
+                                FGApp.makierungX
+                              , FGApp.makierungY
+                              , FGApp.makierungX + FGApp.makierungWidth
+                              , FGApp.makierungY + FGApp.makierungHeight)
+                            .forEach(person => document.getElementById(person.Id).classList.add("marked"))
+
+                            FGApp.makierung = false
+                            FGApp.makierungX = 0
+                            FGApp.makierungY = 0
+                            FGApp.makierungWidth = 0
+                            FGApp.makierungHeight = 0
+                            FGApp.draw()
+                        }
+                    },
+                    "inputMoveElementInit_GraphBoard"
+                )
 
                 FGApp.$GraphWrapper.appendChild(FGApp.$GraphBoard)
 
@@ -358,7 +273,7 @@ app = Object.assign({
                 button.style.float = "right"
                 button.style.background = "none"
                 button.style.borderRadius = "0"
-                button.onmouseup = clickCallback
+                button.onclick = clickCallback
 
                 let li = document.createElement("li");
                 li.appendChild(button)
@@ -528,64 +443,25 @@ app = Object.assign({
                    , parseInt(FGApp.PersonGraph.positions[person.Id].left)
                    , parseInt(FGApp.PersonGraph.positions[person.Id].top))
 
+                app.inputMoveElementInit(
+                    $personPlate,
+                    function () {},
+                    function (e) {
+                        var left = parseInt($personPlate.style.left);
+                        var top = parseInt($personPlate.style.top);
 
-                let touchIdentifer = undefined;
-                let original_x = 0;
-                let original_y = 0;
-                let original_mouse_x = 0;
-                let original_mouse_y = 0;
-
-                $personPlate.ontouchstart = function (e) {
-                    e.preventDefault();
-                    var touches = e.changedTouches;
-                    if (touches.length > 0) {
-                        var touch = touches[0];
-                        touchIdentifer = touch.identifier;
-                        original_x = parseFloat($personPlate.style.left);
-                        original_y = parseFloat($personPlate.style.top);
-                        original_mouse_x = touch.pageX;
-                        original_mouse_y = touch.pageY;
-                        window.addEventListener('touchmove', touchmove, { passive: false })
-                        window.addEventListener('touchend', touchend)
-                        window.addEventListener('touchcancel', touchend)
-                    }
-                    return false;
-                }
-
-                function touchmove (e) {
-
-                    e.preventDefault();
-                    var touches = e.changedTouches;
-                    var touch = Array.from(touches).find( t => t.identifier == touchIdentifer)
-                    if (touch) {
-                        var left =  original_x + (touch.pageX - original_mouse_x);
-                        var top = original_y + (touch.pageY - original_mouse_y) ;
-
-                        var deltaX = parseInt($personPlate.style.left) - left;
-                        var deltaY = parseInt($personPlate.style.top) - top;
-
-                        FGApp.setPersonPlate($personPlate, left, top)
+                        FGApp.setPersonPlate($personPlate, e.newTargetX, e.newTargetY)
                         document.querySelectorAll('.marked').forEach(function(elm){
-                          FGApp.setPersonPlate(elm, parseInt(elm.style.left) - deltaX, parseInt(elm.style.top) - deltaY)
+                            if (elm != $personPlate)
+                                FGApp.setPersonPlate(elm, parseInt(elm.style.left) - (left - e.newTargetX), parseInt(elm.style.top) - (top - e.newTargetY))
                         })
-
-                    }
-                    return false;
-                }
-
-                function touchend () {
-                    FGApp.draw()
-                    window.removeEventListener('touchmove', touchmove)
-                }
-
-                $personPlate.onmousedown = function(event){
-                    if (event.which === 1){
-                        var elm = this;
-                        drag(elm, event, function(){
-                            FGApp.draw()
-                        })
-                    }
-                }
+                        FGApp.draw()
+                    },
+                    function () {
+                        FGApp.draw()
+                    },
+                    "inputMoveElementInit_personPlate_"+$personPlate.id
+                )
 
                 $personPlate.ondblclick = function (event) {
                     if (event.which === 1){
@@ -601,6 +477,7 @@ app = Object.assign({
                 $personImage.style.marginLeft = ((FGApp.personWidth)/4) + 'px'
                 $personImage.style.border = "1px solid #ccc"
                 $personImage.style.borderRadius = ((FGApp.personWidth)/4) + 'px'
+                $personImage.style.pointerEvents = "none"
                 $personPlate.appendChild($personImage)
 
                 let $namePlate = document.createElement('div')
@@ -609,6 +486,7 @@ app = Object.assign({
                 $namePlate.style.border = '1px solid rgba(0,0,0,.2)'
                 $namePlate.style.borderRadius = '5px'
                 $namePlate.style.padding = '2px'
+                $namePlate.style.pointerEvents = "none"
 
                 $namePlate.style.fontSize = FGApp.personFontSize
                 $namePlate.style.fontFamily = "Lato"
@@ -764,141 +642,6 @@ app = Object.assign({
         }
 
         FGApp.init()
-
-        /* Drag ------------------- */
-
-        function drag(elementToDrag, event, callback)
-        {
-           // The mouse position (in window coordinates)
-           // at which the drag begins
-           var startX = event.clientX, startY = event.clientY;
-
-           // The original position (in document coordinates) of the
-           // element that is going to be dragged. Since elementToDrag is
-           // absolutely positioned, we assume that its offsetParent is the
-           //document bodt.
-           var origX = elementToDrag.offsetLeft , origY = elementToDrag.offsetTop;
-
-           // Even though the coordinates are computed in different
-           // coordinate systems, we can still compute the difference between them
-           // and use it in the moveHandler() function. This works because
-           // the scrollbar positoin never changes during the drag.
-           var deltaX = startX - origX, deltaY = startY - origY;
-
-           elementToDrag.className = 'drag';
-
-           // Register the event handlers that will respond to the mousemove events
-           // and the mouseup event that follow this mousedown event.
-           if (document.addEventListener) //DOM Level 2 event model
-           {
-               // Register capturing event handlers
-               document.addEventListener("mousemove", moveHandler, true);
-               document.addEventListener("mouseup", upHandler, true);
-           }
-           else if (document.attachEvent) //IE 5+ Event Model
-           {
-               //In the IE event model, we capture events by calling
-               //setCapture() on the element to capture them.
-               elementToDrag.setCapture();
-               elementToDrag.attachEvent("onmousemove", moveHandler);
-               elementToDrag.attachEvent("onmouseup", upHandler);
-               // Treat loss of mouse capture as a mouseup event.
-               elementToDrag.attachEvent("onclosecapture", upHandler);
-           }
-           else //IE 4 Event Model
-           {
-               // In IE 4, we can't use attachEvent() or setCapture(), so we set
-               // event handlers directly on the document object and hope that the
-               // mouse event we need will bubble up.
-               var oldmovehandler = document.onmousemove; //used by upHandler()
-               var olduphandler = document.onmouseup;
-               document.onmousemove = moveHandler;
-               document.onmouseup = upHandler;
-           }
-
-           // We've handled this event. Don't let anybody else see it.
-           if (event.stopPropagation) event.stopPropagation();    //  DOM Level 2
-           else event.cancelBubble = true;                        //  IE
-
-           // Now prevent any default action.
-           if (event.preventDefault) event.preventDefault();      //  DOM Level 2
-           else event.returnValue = false;                        //  IE
-
-           /**
-            * This is the handler that captures mousemove events when an element
-            * is being dragged. It is responsible for moving the element.
-            **/
-            function moveHandler(e)
-            {
-                if (!e) e = window.event; //  IE Event Model
-
-                // Move the element to the current mouse position, adjusted as
-                // necessary by the offset of the initial mouse-click.
-                var offsetX = parseInt(elementToDrag.style.left);
-                var offsetY = parseInt(elementToDrag.style.top);
-                FGApp.setPersonPlate(elementToDrag, e.clientX - deltaX, e.clientY - deltaY)
-                offsetX -= parseInt(elementToDrag.style.left);
-                offsetY -= parseInt(elementToDrag.style.top);
-
-                document.querySelectorAll('.marked').forEach(function(elm){
-                  FGApp.setPersonPlate(elm, parseInt(elm.style.left) - offsetX, parseInt(elm.style.top) - offsetY )
-                })
-
-                // And don't let anyone else see this event.
-                if (e.stopPropagation) e.stopPropagation();       // DOM Level 2
-                else e.cancelBubble = true;                       // IE
-            }
-
-            /**
-             * This is the handler that captures the final mouseup event that
-             * occurs at the end of a drag.
-             **/
-             function upHandler(e)
-             {
-                 if (!e) e = window.event;    //IE Event Model
-
-                 // Unregister the capturing event handlers.
-                 if (document.removeEventListener) // DOM event model
-                  {
-                      document.removeEventListener("mouseup", upHandler, true);
-                      document.removeEventListener("mousemove", moveHandler, true);
-                  }
-                  else if (document.detachEvent)  //  IE 5+ Event Model
-                  {
-                      elementToDrag.detachEvent("onlosecapture", upHandler);
-                      elementToDrag.detachEvent("onmouseup", upHandler);
-                      elementToDrag.detachEvent("onmousemove", moveHandler);
-                      elementToDrag.releaseCapture();
-                  }
-                  else    //IE 4 Event Model
-                  {
-                      //Restore the original handlers, if any
-                      document.onmouseup = olduphandler;
-                      document.onmousemove = oldmovehandler;
-                  }
-
-                  // Rene
-                  elementToDrag.className = '';
-                  callback()
-
-                  //  And don't let the event propagate any further.
-                  if (e.stopPropagation) e.stopPropagation(); //DOM Level 2
-                  else e.cancelBubble = true;                 //IE
-             }
-        }
-
-        function closeMe(elementToClose)
-        {
-           elementToClose.innerHTML = '';
-           elementToClose.style.display = 'none';
-        }
-
-        function minimizeMe(elementToMin, maxElement)
-        {
-           elementToMin.style.display = 'none';
-        }
-
     }
-
 
 }, app)
