@@ -23,7 +23,7 @@ app = Object.assign({
                 person.HeaderBild = "assets/img/familyGraph/woman.png";
             }
         } else {
-            person.HeaderBild = person.Bild
+            person.HeaderBild = person.Bild.replace(".jpeg", "_autox200.jpeg")
         }
 
         if (person.Kinder) {

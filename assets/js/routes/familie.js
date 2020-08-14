@@ -455,7 +455,7 @@ app = Object.assign({
                             if (elm != $personPlate)
                                 FGApp.setPersonPlate(elm, parseInt(elm.style.left) - (left - e.newTargetX), parseInt(elm.style.top) - (top - e.newTargetY))
                         })
-                        FGApp.draw()
+                        //FGApp.draw()
                     },
                     function () {
                         FGApp.draw()
@@ -586,7 +586,7 @@ app = Object.assign({
                     img.src = "assets/img/familyGraph/question.jpg";
                 }
                 else if (person.Bild){
-                    img.src = person.Bild;
+                    img.src = person.Bild.replace(".jpeg", "_autox52.jpeg");
                 }
                 else if (person.Geschlecht === "Männlich")
                     img.src = "assets/img/familyGraph/man.png";

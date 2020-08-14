@@ -46,6 +46,9 @@ app = Object.assign({
                     } else {
                         json.Bild = "assets/img/familyGraph/woman.png";
                     }
+                } else {
+                    if (view == "cards")
+                        json.Bild = json.Bild.replace(".jpeg", "_autox300.jpeg")
                 }
 
                 innerHtml += app.renderTemplate("person_"+view, json);

@@ -51,6 +51,8 @@ app = Object.assign({
                         bild.PersonenLine += person.Vornamen + " " + person.Name + ";"
                     })
                 }
+                if (view == "cards")
+                    bild.URL = bild.URL.replace(".jpeg", "_autox300.jpeg")
                 innerHtml += app.renderTemplate("bild_"+view, bild);
             })
         }
