@@ -5,7 +5,7 @@
 //uses vendors/polyfill.js
 //uses vendors/limit.js
 
-app = Object.assign({
+Moments = Object.assign({
 
     /**
      * Fügt Dragging Mouse/Touch-Events an das Element und ruft zum Start, während des Moves und am Ende die entsprechenden Callbacks auf.
@@ -146,4 +146,4 @@ app = Object.assign({
         }
     }
 
-}, app)
+}, Moments)

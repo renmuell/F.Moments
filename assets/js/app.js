@@ -2,11 +2,11 @@
  *  app
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     init: function () {
-        app.startRouting();
-        app.bindNav();
+        Moments.startRouting();
+        Moments.bindNav();
     }
 
-}, app)
+}, Moments)

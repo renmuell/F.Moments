@@ -2,7 +2,7 @@
  *  UTILS
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     clearChilds: function (id) {
         document.querySelector(id).innerHTML = "";
@@ -23,7 +23,7 @@ app = Object.assign({
                 if (Array.isArray(value)) {
                     var innerhtml = "";
                     value.forEach(function(item) {
-                        innerhtml += app.renderTemplate(id + "_" + key, typeof item == "object" ? item : { data: item });
+                        innerhtml += Moments.renderTemplate(id + "_" + key, typeof item == "object" ? item : { data: item });
                     });
                     result = result.replace(RegExp(match, 'g'), innerhtml)
                 } else {
@@ -69,4 +69,4 @@ app = Object.assign({
         return json;
     }
 
-}, app)
+}, Moments)

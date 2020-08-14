@@ -2,7 +2,7 @@
  *  Test
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     route_liste: function () {
 
@@ -337,4 +337,4 @@ app = Object.assign({
 
     }
 
-}, app)
+}, Moments)

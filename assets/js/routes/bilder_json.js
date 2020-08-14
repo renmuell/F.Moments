@@ -2,10 +2,10 @@
  *  Bilder JSON
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     route_json_bilder: function () {
-        app.json_editor_init("json_bilder")
+        Moments.json_editor_init("json_bilder")
     },
 
-}, app)
+}, Moments)

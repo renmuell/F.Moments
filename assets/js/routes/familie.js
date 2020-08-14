@@ -2,11 +2,11 @@
  *  Famile
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     route_familie: function () {
 
-        let FGApp = {
+        let FGMoments = {
             PersonDirectory : {}
           , PersonenJson    : undefined
           , PersonGraph     : undefined
@@ -30,37 +30,37 @@ app = Object.assign({
           , touchMarking: false
 
           , init: function(){
-                if (app.FGAppInit) return;
+                if (Moments.FGAppInit) return;
 
-                FGApp.loadJSON();
+                FGMoments.loadJSON();
 
-                app.FGAppInit = true;
+                Moments.FGAppInit = true;
              }
 
           , loadJSON: function () {
 
-                FGApp.PersonenJson = app.getStorageJson("json_personen")
+                FGMoments.PersonenJson = Moments.getStorageJson("json_personen")
 
-                if (FGApp.PersonenJson && FGApp.PersonenJson.Personen) {
+                if (FGMoments.PersonenJson && FGMoments.PersonenJson.Personen) {
 
-                    FGApp.PersonenJson.Personen.forEach(function(person){
-                        FGApp.PersonDirectory[person.Id] = person
+                    FGMoments.PersonenJson.Personen.forEach(function(person){
+                        FGMoments.PersonDirectory[person.Id] = person
                     })
 
-                    FGApp.PersonGraph = app.getStorageJson("json_familie_graph")
+                    FGMoments.PersonGraph = Moments.getStorageJson("json_familie_graph")
 
-                    if (FGApp.PersonGraph == null){
-                        FGApp.PersonGraph = {
+                    if (FGMoments.PersonGraph == null){
+                        FGMoments.PersonGraph = {
                             positions: {},
                             width: "10000px",
                             height: "10000px"
                         }
                     }
 
-                    if (FGApp.PersonGraph.positions == ""){
-                        FGApp.PersonGraph.positions = {}
-                        FGApp.PersonenJson.Personen.forEach(function(person){
-                            FGApp.PersonGraph.positions[person.Id] = {
+                    if (FGMoments.PersonGraph.positions == ""){
+                        FGMoments.PersonGraph.positions = {}
+                        FGMoments.PersonenJson.Personen.forEach(function(person){
+                            FGMoments.PersonGraph.positions[person.Id] = {
                                 Id : person.Id
                             , left: '0px'
                             , top: '0px'
@@ -69,9 +69,9 @@ app = Object.assign({
                         })
                     }
 
-                    FGApp.PersonenJson.Personen.forEach(function(person){
-                        if (typeof FGApp.PersonGraph.positions[person.Id] === "undefined") {
-                            FGApp.PersonGraph.positions[person.Id] = {
+                    FGMoments.PersonenJson.Personen.forEach(function(person){
+                        if (typeof FGMoments.PersonGraph.positions[person.Id] === "undefined") {
+                            FGMoments.PersonGraph.positions[person.Id] = {
                                 Id : person.Id
                                 , left: '0px'
                                 , top: '0px'
@@ -80,122 +80,122 @@ app = Object.assign({
                         }
                     })
 
-                    FGApp.PersonenJson.Personen
-                    .map(person => FGApp.PersonGraph.positions[person.Id])
+                    FGMoments.PersonenJson.Personen
+                    .map(person => FGMoments.PersonGraph.positions[person.Id])
                     .forEach(x => { x.color = x.color ? x.color : "lightGreen"})
 
-                    FGApp.start()
+                    FGMoments.start()
                 }
             }
 
           , createDom: function(){
-                FGApp.$GraphWrapper = document.createElement('div')
-                FGApp.$GraphWrapper.id = 'FamilieGraphWrapper'
-                FGApp.$GraphWrapper.style.position = 'relative'
-                FGApp.$GraphWrapper.style.height = '100%'
-                FGApp.$GraphWrapper.style.width = '100%'
-                FGApp.$GraphWrapper.style.overflow = 'scroll'
-                document.querySelector('[data-tab="familie"] main').appendChild(FGApp.$GraphWrapper)
+                FGMoments.$GraphWrapper = document.createElement('div')
+                FGMoments.$GraphWrapper.id = 'FamilieGraphWrapper'
+                FGMoments.$GraphWrapper.style.position = 'relative'
+                FGMoments.$GraphWrapper.style.height = '100%'
+                FGMoments.$GraphWrapper.style.width = '100%'
+                FGMoments.$GraphWrapper.style.overflow = 'scroll'
+                document.querySelector('[data-tab="familie"] main').appendChild(FGMoments.$GraphWrapper)
 
 
-                FGApp.$GraphCanvas = document.createElement('canvas')
-                FGApp.$GraphCanvas.id = 'FamilieGraphCanvas'
-                FGApp.$GraphCanvas.style.position = "absolute"
-                FGApp.$GraphCanvas.style.left = "0px"
-                FGApp.$GraphCanvas.style.top = "0px"
-                FGApp.$GraphCanvas.style.opacity = "0.8"
+                FGMoments.$GraphCanvas = document.createElement('canvas')
+                FGMoments.$GraphCanvas.id = 'FamilieGraphCanvas'
+                FGMoments.$GraphCanvas.style.position = "absolute"
+                FGMoments.$GraphCanvas.style.left = "0px"
+                FGMoments.$GraphCanvas.style.top = "0px"
+                FGMoments.$GraphCanvas.style.opacity = "0.8"
 
-                FGApp.$GraphCanvas.style.height = FGApp.PersonGraph.height
-                FGApp.$GraphCanvas.style.width = FGApp.PersonGraph.width
-                FGApp.$GraphCanvas.height = parseInt(FGApp.PersonGraph.height)
-                FGApp.$GraphCanvas.width = parseInt(FGApp.PersonGraph.width)
-                FGApp.$GraphWrapper.appendChild(FGApp.$GraphCanvas)
+                FGMoments.$GraphCanvas.style.height = FGMoments.PersonGraph.height
+                FGMoments.$GraphCanvas.style.width = FGMoments.PersonGraph.width
+                FGMoments.$GraphCanvas.height = parseInt(FGMoments.PersonGraph.height)
+                FGMoments.$GraphCanvas.width = parseInt(FGMoments.PersonGraph.width)
+                FGMoments.$GraphWrapper.appendChild(FGMoments.$GraphCanvas)
 
-                FGApp.Graph2dContext = document.getElementById(FGApp.$GraphCanvas.id).getContext('2d')
+                FGMoments.Graph2dContext = document.getElementById(FGMoments.$GraphCanvas.id).getContext('2d')
 
-                FGApp.$GraphBoard = document.createElement('div')
-                FGApp.$GraphBoard.id = 'FamilieGraphBoard'
+                FGMoments.$GraphBoard = document.createElement('div')
+                FGMoments.$GraphBoard.id = 'FamilieGraphBoard'
 
-                if (FGApp.showDots) {
-                    FGApp.$GraphBoard.className = "dotted"
+                if (FGMoments.showDots) {
+                    FGMoments.$GraphBoard.className = "dotted"
                 }
 
-                FGApp.$GraphBoard.style.position = "absolute"
-                FGApp.$GraphBoard.style.left = "0px"
-                FGApp.$GraphBoard.style.top = "0px"
-                FGApp.$GraphBoard.style.height = FGApp.PersonGraph.height
-                FGApp.$GraphBoard.style.width = FGApp.PersonGraph.width
+                FGMoments.$GraphBoard.style.position = "absolute"
+                FGMoments.$GraphBoard.style.left = "0px"
+                FGMoments.$GraphBoard.style.top = "0px"
+                FGMoments.$GraphBoard.style.height = FGMoments.PersonGraph.height
+                FGMoments.$GraphBoard.style.width = FGMoments.PersonGraph.width
 
-                FGApp.Graph2dContext.strokeStyle = 'rgba(0,0,255,0.1)';
-                FGApp.Graph2dContext.fillStyle = 'rgba(0,0,255,0.1)';
-                FGApp.Graph2dContext.lineWidth = 1
-                FGApp.Graph2dContext.lineCap="round";
+                FGMoments.Graph2dContext.strokeStyle = 'rgba(0,0,255,0.1)';
+                FGMoments.Graph2dContext.fillStyle = 'rgba(0,0,255,0.1)';
+                FGMoments.Graph2dContext.lineWidth = 1
+                FGMoments.Graph2dContext.lineCap="round";
 
-                app.inputMoveElementInit(
-                    FGApp.$GraphBoard,
+                Moments.inputMoveElementInit(
+                    FGMoments.$GraphBoard,
                     function (e) {
-                        if (FGApp.touchMarking) {
-                            FGApp.makierung = true;
+                        if (FGMoments.touchMarking) {
+                            FGMoments.makierung = true;
 
                             e.setLayerXY()
-                            FGApp.makierungX = e.layerX
-                            FGApp.makierungY = e.layerY
+                            FGMoments.makierungX = e.layerX
+                            FGMoments.makierungY = e.layerY
 
-                            FGApp.$personPlates.forEach(x => x.classList.remove("marked"))
-                            //FGApp.$personPlates.forEach(x => x.style.pointerEvents = "none")
+                            FGMoments.$personPlates.forEach(x => x.classList.remove("marked"))
+                            //FGMoments.$personPlates.forEach(x => x.style.pointerEvents = "none")
 
-                            FGApp.draw()
+                            FGMoments.draw()
                         }
                     },
                     function (e) {
-                        if (FGApp.makierung){
+                        if (FGMoments.makierung){
                             e.setLayerXY()
-                            FGApp.makierungWidth = e.layerX - FGApp.makierungX
-                            FGApp.makierungHeight = e.layerY - FGApp.makierungY
-                            FGApp.draw()
+                            FGMoments.makierungWidth = e.layerX - FGMoments.makierungX
+                            FGMoments.makierungHeight = e.layerY - FGMoments.makierungY
+                            FGMoments.draw()
                         }
                     },
                     function () {
-                        FGApp.touchMarking = false;
+                        FGMoments.touchMarking = false;
                         document.querySelector('[data-tab="familie"] nav .fa-vector-square').parentElement.style.background = "white"
 
-                        if (FGApp.makierung){
+                        if (FGMoments.makierung){
 
-                            if (FGApp.makierungWidth < 0) {
-                                FGApp.makierungWidth = FGApp.makierungWidth * -1
-                                FGApp.makierungX = FGApp.makierungX - FGApp.makierungWidth
+                            if (FGMoments.makierungWidth < 0) {
+                                FGMoments.makierungWidth = FGMoments.makierungWidth * -1
+                                FGMoments.makierungX = FGMoments.makierungX - FGMoments.makierungWidth
                             }
 
-                            if (FGApp.makierungHeight < 0) {
-                                FGApp.makierungHeight = FGApp.makierungHeight * -1
-                                FGApp.makierungY = FGApp.makierungY - FGApp.makierungHeight
+                            if (FGMoments.makierungHeight < 0) {
+                                FGMoments.makierungHeight = FGMoments.makierungHeight * -1
+                                FGMoments.makierungY = FGMoments.makierungY - FGMoments.makierungHeight
                             }
 
-                            FGApp.getAllPersonsInArea(
-                                FGApp.makierungX
-                              , FGApp.makierungY
-                              , FGApp.makierungX + FGApp.makierungWidth
-                              , FGApp.makierungY + FGApp.makierungHeight)
+                            FGMoments.getAllPersonsInArea(
+                                FGMoments.makierungX
+                              , FGMoments.makierungY
+                              , FGMoments.makierungX + FGMoments.makierungWidth
+                              , FGMoments.makierungY + FGMoments.makierungHeight)
                             .forEach(person => document.getElementById(person.Id).classList.add("marked"))
 
-                            FGApp.makierung = false
-                            FGApp.makierungX = 0
-                            FGApp.makierungY = 0
-                            FGApp.makierungWidth = 0
-                            FGApp.makierungHeight = 0
-                            FGApp.draw()
+                            FGMoments.makierung = false
+                            FGMoments.makierungX = 0
+                            FGMoments.makierungY = 0
+                            FGMoments.makierungWidth = 0
+                            FGMoments.makierungHeight = 0
+                            FGMoments.draw()
                         }
                     },
                     "inputMoveElementInit_GraphBoard"
                 )
 
-                FGApp.$GraphWrapper.appendChild(FGApp.$GraphBoard)
+                FGMoments.$GraphWrapper.appendChild(FGMoments.$GraphBoard)
 
-                FGApp.addButtonToMenu('<i class="fas fa-save"></i>', function(){
-                    FGApp.createPersonGraphJson()
+                FGMoments.addButtonToMenu('<i class="fas fa-save"></i>', function(){
+                    FGMoments.createPersonGraphJson()
                 })
 
-                FGApp.addButtonToMenu('<i class="fas fa-ellipsis-h"></i>', function(){
+                FGMoments.addButtonToMenu('<i class="fas fa-ellipsis-h"></i>', function(){
                     var maxY,minY, centerY
 
                     document.querySelectorAll('.marked')
@@ -214,37 +214,37 @@ app = Object.assign({
 
                     document.querySelectorAll('.marked')
                     .forEach(function(elm){
-                        FGApp.setPersonPlate(elm, parseInt(elm.style.left), centerY)
+                        FGMoments.setPersonPlate(elm, parseInt(elm.style.left), centerY)
                     })
 
-                    FGApp.draw()
+                    FGMoments.draw()
                 })
 
-                var colorPicker = FGApp.addColorPickerToMenu()
+                var colorPicker = FGMoments.addColorPickerToMenu()
 
-                FGApp.addButtonToMenu('<i class="fas fa-paint-brush"></i>', function(){
+                FGMoments.addButtonToMenu('<i class="fas fa-paint-brush"></i>', function(){
                     document.querySelectorAll('.marked')
                     .forEach(function(elm){
                         elm.setAttribute('data-color', colorPicker.value)
-                        FGApp.PersonGraph.positions[elm.id].color = colorPicker.value
-                        FGApp.draw()
+                        FGMoments.PersonGraph.positions[elm.id].color = colorPicker.value
+                        FGMoments.draw()
                     })
                 })
 
-                FGApp.addButtonToMenu('<i class="fas fa-camera"></i>', function(){
-                    var backupWidth = FGApp.$GraphWrapper.style.width
-                    var backupHeight = FGApp.$GraphWrapper.style.height
-                    FGApp.$GraphWrapper.style.width = FGApp.$GraphBoard.style.width
-                    FGApp.$GraphWrapper.style.height = FGApp.$GraphBoard.style.height
+                FGMoments.addButtonToMenu('<i class="fas fa-camera"></i>', function(){
+                    var backupWidth = FGMoments.$GraphWrapper.style.width
+                    var backupHeight = FGMoments.$GraphWrapper.style.height
+                    FGMoments.$GraphWrapper.style.width = FGMoments.$GraphBoard.style.width
+                    FGMoments.$GraphWrapper.style.height = FGMoments.$GraphBoard.style.height
                     document.querySelector('body > nav').style.display = "none"
                     document.querySelector('[data-tab="familie"] > div > nav').style.display = "none"
-                    document.querySelector("html").style.width = FGApp.$GraphBoard.style.width
-                    document.querySelector("html").style.height = FGApp.$GraphBoard.style.height
-                    html2canvas(FGApp.$GraphWrapper, {
+                    document.querySelector("html").style.width = FGMoments.$GraphBoard.style.width
+                    document.querySelector("html").style.height = FGMoments.$GraphBoard.style.height
+                    html2canvas(FGMoments.$GraphWrapper, {
                       onrendered: function(canvas) {
                         canvas.toBlob(function(blob) {
-                            FGApp.$GraphWrapper.style.width = backupWidth
-                            FGApp.$GraphWrapper.style.height = backupHeight
+                            FGMoments.$GraphWrapper.style.width = backupWidth
+                            FGMoments.$GraphWrapper.style.height = backupHeight
 
                             saveAs(blob, "FamilyGrap.png");
 
@@ -257,9 +257,9 @@ app = Object.assign({
                     });
                 })
 
-                FGApp.addButtonToMenu('<i class="fas fa-vector-square"></i> <i class="fas fa-hand-point-up"></i>', function(event){
-                    FGApp.touchMarking = !FGApp.touchMarking;
-                    if (FGApp.touchMarking) {
+                FGMoments.addButtonToMenu('<i class="fas fa-vector-square"></i> <i class="fas fa-hand-point-up"></i>', function(event){
+                    FGMoments.touchMarking = !FGMoments.touchMarking;
+                    if (FGMoments.touchMarking) {
                         event.srcElement.style.background = "lightblue"
                     } else {
                         event.srcElement.style.background = "white"
@@ -295,43 +295,43 @@ app = Object.assign({
                 return colorPicker
            }
           , draw: function(){
-                FGApp.Graph2dContext.clearRect(0, 0, FGApp.$GraphCanvas.width, FGApp.$GraphCanvas.height);
+                FGMoments.Graph2dContext.clearRect(0, 0, FGMoments.$GraphCanvas.width, FGMoments.$GraphCanvas.height);
                  document.querySelectorAll('.familyPlate')
-                        .forEach((f) => FGApp.$GraphBoard.removeChild(f))
-                FGApp.PersonenJson.Personen.forEach(function(person){
+                        .forEach((f) => FGMoments.$GraphBoard.removeChild(f))
+                FGMoments.PersonenJson.Personen.forEach(function(person){
 
 
                     if (person.Mutter)
-                        FGApp.drawLineFromPersonToPerson(person
-                            , FGApp.PersonDirectory[person.Mutter]
-                            , FGApp.personWidth/2
-                            , FGApp.personHeiht/4
-                            , FGApp.personWidth/2
-                            , FGApp.personHeiht/4)
+                        FGMoments.drawLineFromPersonToPerson(person
+                            , FGMoments.PersonDirectory[person.Mutter]
+                            , FGMoments.personWidth/2
+                            , FGMoments.personHeiht/4
+                            , FGMoments.personWidth/2
+                            , FGMoments.personHeiht/4)
                     if (person.Vater)
-                        FGApp.drawLineFromPersonToPerson(person
-                            , FGApp.PersonDirectory[person.Vater]
-                            , FGApp.personWidth/2
-                            , FGApp.personHeiht/4
-                            , FGApp.personWidth/2
-                            , FGApp.personHeiht/4)
+                        FGMoments.drawLineFromPersonToPerson(person
+                            , FGMoments.PersonDirectory[person.Vater]
+                            , FGMoments.personWidth/2
+                            , FGMoments.personHeiht/4
+                            , FGMoments.personWidth/2
+                            , FGMoments.personHeiht/4)
                     if (person.Partner){
 
                         person.Partner.forEach(function(partner){
                             if (partner.Typ =="Ehe")
-                                FGApp.addFamilyName(person, partner);
-                            FGApp.drawLineFromPersonToPerson2(
+                                FGMoments.addFamilyName(person, partner);
+                            FGMoments.drawLineFromPersonToPerson2(
                                   person
-                                , FGApp.PersonDirectory[partner.Partner]
-                                , FGApp.personWidth/2
-                                , FGApp.personHeiht/4
-                                , FGApp.personWidth/2
-                                , FGApp.personHeiht/4)
+                                , FGMoments.PersonDirectory[partner.Partner]
+                                , FGMoments.personWidth/2
+                                , FGMoments.personHeiht/4
+                                , FGMoments.personWidth/2
+                                , FGMoments.personHeiht/4)
                         })
                     }
                 })
 
-                FGApp.Graph2dContext.fillRect(FGApp.makierungX, FGApp.makierungY, FGApp.makierungWidth, FGApp.makierungHeight);
+                FGMoments.Graph2dContext.fillRect(FGMoments.makierungX, FGMoments.makierungY, FGMoments.makierungWidth, FGMoments.makierungHeight);
 
            }
           , addFamilyName(person, partner){
@@ -340,22 +340,22 @@ app = Object.assign({
                 $namePlate.className = "familyPlate"
                 $namePlate.style.position = "absolute"
 
-                var person1X = parseInt(FGApp.PersonGraph.positions[person.Id].left)
-                var person2X = parseInt(FGApp.PersonGraph.positions[partner.Partner].left)
+                var person1X = parseInt(FGMoments.PersonGraph.positions[person.Id].left)
+                var person2X = parseInt(FGMoments.PersonGraph.positions[partner.Partner].left)
 
                 if (person1X < person2X) {
-                    $namePlate.style.left = (person1X + (FGApp.personWidth/2)) + "px"
+                    $namePlate.style.left = (person1X + (FGMoments.personWidth/2)) + "px"
                 } else {
-                    $namePlate.style.left = (person2X + (FGApp.personWidth/2)) + "px"
+                    $namePlate.style.left = (person2X + (FGMoments.personWidth/2)) + "px"
                 }
 
-                $namePlate.style.top = (parseInt(FGApp.PersonGraph.positions[person.Id].top)-34)+"px"
-                $namePlate.style.width = ((FGApp.personWidth)) + "px"
+                $namePlate.style.top = (parseInt(FGMoments.PersonGraph.positions[person.Id].top)-34)+"px"
+                $namePlate.style.width = ((FGMoments.personWidth)) + "px"
                 $namePlate.style.height = "30px"
                 $namePlate.style.padding = "2px"
                 $namePlate.style.textAlign = 'center'
-                $namePlate.style.backgroundColor = FGApp.PersonGraph.positions[person.Id].color
-                $namePlate.style.color = invertColor(FGApp.PersonGraph.positions[person.Id].color)
+                $namePlate.style.backgroundColor = FGMoments.PersonGraph.positions[person.Id].color
+                $namePlate.style.color = invertColor(FGMoments.PersonGraph.positions[person.Id].color)
                 //$namePlate.style.border = '1px solid rgba(0,0,0,.2)'
                 $namePlate.style.borderTopLeftRadius = '5px'
                 $namePlate.style.borderTopRightRadius = '5px'
@@ -365,36 +365,36 @@ app = Object.assign({
                 $namePlate.style.fontFamily = "Lato"
 
                 $namePlate.innerHTML = person.Name;
-                FGApp.$GraphBoard.appendChild($namePlate)
+                FGMoments.$GraphBoard.appendChild($namePlate)
                 }
             }
           , drawLineFromPersonToPerson2(person1, person2, person1XOffset, person1YOffset, person2XOffset, person2YOffset){
                 if (person1 && person2) {
-                   var backupLineWidth = FGApp.Graph2dContext.lineWidth;
-                   FGApp.Graph2dContext.beginPath();
-                   FGApp.Graph2dContext.lineWidth = FGApp.personWidth/2;
-                   FGApp.Graph2dContext.strokeStyle = FGApp.PersonGraph.positions[person2.Id].color;
-                   FGApp.Graph2dContext.moveTo(
-                     parseInt(FGApp.PersonGraph.positions[person1.Id].left) + person1XOffset
-                   , parseInt(FGApp.PersonGraph.positions[person1.Id].top) + person1YOffset)
+                   var backupLineWidth = FGMoments.Graph2dContext.lineWidth;
+                   FGMoments.Graph2dContext.beginPath();
+                   FGMoments.Graph2dContext.lineWidth = FGMoments.personWidth/2;
+                   FGMoments.Graph2dContext.strokeStyle = FGMoments.PersonGraph.positions[person2.Id].color;
+                   FGMoments.Graph2dContext.moveTo(
+                     parseInt(FGMoments.PersonGraph.positions[person1.Id].left) + person1XOffset
+                   , parseInt(FGMoments.PersonGraph.positions[person1.Id].top) + person1YOffset)
 
-                   FGApp.Graph2dContext.lineTo(
-                     parseInt(FGApp.PersonGraph.positions[person2.Id].left) + person2XOffset
-                   , parseInt(FGApp.PersonGraph.positions[person2.Id].top) + person2YOffset)
-                   FGApp.Graph2dContext.stroke();
-                   FGApp.Graph2dContext.lineWidth = backupLineWidth;
+                   FGMoments.Graph2dContext.lineTo(
+                     parseInt(FGMoments.PersonGraph.positions[person2.Id].left) + person2XOffset
+                   , parseInt(FGMoments.PersonGraph.positions[person2.Id].top) + person2YOffset)
+                   FGMoments.Graph2dContext.stroke();
+                   FGMoments.Graph2dContext.lineWidth = backupLineWidth;
                }
             }
           , drawLineFromPersonToPerson(person1, person2, person1XOffset, person1YOffset, person2XOffset, person2YOffset) {
 
                 if (person1 && person2) {
 
-                   FGApp.drawCurve(
-                     parseInt(FGApp.PersonGraph.positions[person1.Id].left) + person1XOffset
-                   , parseInt(FGApp.PersonGraph.positions[person1.Id].top) + person1YOffset
-                   , parseInt(FGApp.PersonGraph.positions[person2.Id].left) + person2XOffset
-                   , parseInt(FGApp.PersonGraph.positions[person2.Id].top) + person2YOffset
-                   , FGApp.PersonGraph.positions[person2.Id].color)
+                   FGMoments.drawCurve(
+                     parseInt(FGMoments.PersonGraph.positions[person1.Id].left) + person1XOffset
+                   , parseInt(FGMoments.PersonGraph.positions[person1.Id].top) + person1YOffset
+                   , parseInt(FGMoments.PersonGraph.positions[person2.Id].left) + person2XOffset
+                   , parseInt(FGMoments.PersonGraph.positions[person2.Id].top) + person2YOffset
+                   , FGMoments.PersonGraph.positions[person2.Id].color)
                }
            }
           , setPersonPlate: function (elm, left, top){
@@ -403,24 +403,24 @@ app = Object.assign({
                 elm.style.left = left + "px"
                 elm.style.top = top + "px"
 
-                FGApp.PersonGraph.positions[elm.id].left = elm.style.left
-                FGApp.PersonGraph.positions[elm.id].top = elm.style.top
+                FGMoments.PersonGraph.positions[elm.id].left = elm.style.left
+                FGMoments.PersonGraph.positions[elm.id].top = elm.style.top
             }
           , getAllPersonsInArea : function(left,top, right, bottom) {
-                return FGApp.PersonenJson.Personen
-                .map(person => FGApp.PersonGraph.positions[person.Id])
+                return FGMoments.PersonenJson.Personen
+                .map(person => FGMoments.PersonGraph.positions[person.Id])
                 .filter(position =>
-                    (left   < (parseInt(position.left) + FGApp.personWidth) &&
+                    (left   < (parseInt(position.left) + FGMoments.personWidth) &&
                       right  > parseInt(position.left) &&
                       bottom > parseInt(position.top) &&
-                      top    < (parseInt(position.top) + FGApp.personHeiht)))
-                .map(position => FGApp.PersonDirectory[position.Id])
+                      top    < (parseInt(position.top) + FGMoments.personHeiht)))
+                .map(position => FGMoments.PersonDirectory[position.Id])
           }
 
           , start: function(){
-                FGApp.createDom()
-                FGApp.PersonenJson.Personen.forEach(FGApp.personCallback)
-                FGApp.draw()
+                FGMoments.createDom()
+                FGMoments.PersonenJson.Personen.forEach(FGMoments.personCallback)
+                FGMoments.draw()
             }
           , personWidth: 100
           , personHeiht: 100
@@ -430,53 +430,53 @@ app = Object.assign({
                 let $personPlate = document.createElement('div')
                 $personPlate.id = person.Id
 
-                $personPlate.style.width = FGApp.personWidth + 'px'
-                $personPlate.style.height = FGApp.personHeiht + 'px'
+                $personPlate.style.width = FGMoments.personWidth + 'px'
+                $personPlate.style.height = FGMoments.personHeiht + 'px'
                 $personPlate.style.position = 'absolute'
 
                 $personPlate.setAttribute(
                     'data-color'
-                 ,  FGApp.PersonGraph.positions[person.Id].color)
+                 ,  FGMoments.PersonGraph.positions[person.Id].color)
 
-                FGApp.setPersonPlate(
+                FGMoments.setPersonPlate(
                      $personPlate
-                   , parseInt(FGApp.PersonGraph.positions[person.Id].left)
-                   , parseInt(FGApp.PersonGraph.positions[person.Id].top))
+                   , parseInt(FGMoments.PersonGraph.positions[person.Id].left)
+                   , parseInt(FGMoments.PersonGraph.positions[person.Id].top))
 
-                app.inputMoveElementInit(
+                Moments.inputMoveElementInit(
                     $personPlate,
                     function () {},
                     function (e) {
                         var left = parseInt($personPlate.style.left);
                         var top = parseInt($personPlate.style.top);
 
-                        FGApp.setPersonPlate($personPlate, e.newTargetX, e.newTargetY)
+                        FGMoments.setPersonPlate($personPlate, e.newTargetX, e.newTargetY)
                         document.querySelectorAll('.marked').forEach(function(elm){
                             if (elm != $personPlate)
-                                FGApp.setPersonPlate(elm, parseInt(elm.style.left) - (left - e.newTargetX), parseInt(elm.style.top) - (top - e.newTargetY))
+                                FGMoments.setPersonPlate(elm, parseInt(elm.style.left) - (left - e.newTargetX), parseInt(elm.style.top) - (top - e.newTargetY))
                         })
-                        //FGApp.draw()
+                        //FGMoments.draw()
                     },
                     function () {
-                        FGApp.draw()
+                        FGMoments.draw()
                     },
                     "inputMoveElementInit_personPlate_"+$personPlate.id
                 )
 
                 $personPlate.ondblclick = function (event) {
                     if (event.which === 1){
-                        app.changeRoute("person", {
+                        Moments.changeRoute("person", {
                             id: this.id
                         })
                     }
                 }
 
-                let $personImage = FGApp.createImage(person)
-                $personImage.style.width = ((FGApp.personWidth)/2) + 'px'
-                $personImage.style.height = ((FGApp.personWidth)/2) + 'px'
-                $personImage.style.marginLeft = ((FGApp.personWidth)/4) + 'px'
+                let $personImage = FGMoments.createImage(person)
+                $personImage.style.width = ((FGMoments.personWidth)/2) + 'px'
+                $personImage.style.height = ((FGMoments.personWidth)/2) + 'px'
+                $personImage.style.marginLeft = ((FGMoments.personWidth)/4) + 'px'
                 $personImage.style.border = "1px solid #ccc"
-                $personImage.style.borderRadius = ((FGApp.personWidth)/4) + 'px'
+                $personImage.style.borderRadius = ((FGMoments.personWidth)/4) + 'px'
                 $personImage.style.pointerEvents = "none"
                 $personPlate.appendChild($personImage)
 
@@ -488,10 +488,10 @@ app = Object.assign({
                 $namePlate.style.padding = '2px'
                 $namePlate.style.pointerEvents = "none"
 
-                $namePlate.style.fontSize = FGApp.personFontSize
+                $namePlate.style.fontSize = FGMoments.personFontSize
                 $namePlate.style.fontFamily = "Lato"
 
-                $namePlate.innerHTML = FGApp.getPersonName(person)
+                $namePlate.innerHTML = FGMoments.getPersonName(person)
 
                 if (person.Geburtstag){
                     $namePlate.innerHTML += "<hr>"
@@ -505,9 +505,9 @@ app = Object.assign({
 
                 $personPlate.appendChild($namePlate)
 
-                FGApp.$GraphBoard.appendChild($personPlate)
+                FGMoments.$GraphBoard.appendChild($personPlate)
 
-                FGApp.$personPlates.push($personPlate)
+                FGMoments.$personPlates.push($personPlate)
             }
           , drawCurve: function(x, y, xx, yy, color){
                 /// set up some values
@@ -533,8 +533,8 @@ app = Object.assign({
                 c2 = {x: p2.x, y: p2.y - my};
 
                 /// render the smooth curves using 1/4 ellipses
-                FGApp.Graph2dContext.beginPath();
-                FGApp.Graph2dContext.strokeStyle = color;
+                FGMoments.Graph2dContext.beginPath();
+                FGMoments.Graph2dContext.strokeStyle = color;
                 for(var isFirst = true,            /// first point is moveTo, rest lineTo
                         angle = 1.5 * Math.PI,     /// start angle in radians
                         goal = 2 * Math.PI,        /// goal angle
@@ -545,7 +545,7 @@ app = Object.assign({
                     y = c1.y + my * Math.sin(angle);
 
                     /// move or draw line
-                    (isFirst) ? FGApp.Graph2dContext.moveTo(x, y) : FGApp.Graph2dContext.lineTo(x, y);
+                    (isFirst) ? FGMoments.Graph2dContext.moveTo(x, y) : FGMoments.Graph2dContext.lineTo(x, y);
                     isFirst = false;
                 }
 
@@ -558,11 +558,11 @@ app = Object.assign({
                     x = c2.x + mx * Math.cos(angle);
                     y = c2.y + my * Math.sin(angle);
 
-                    (isFirst) ? FGApp.Graph2dContext.lineTo(x, y) : FGApp.Graph2dContext.lineTo(x, y);
+                    (isFirst) ? FGMoments.Graph2dContext.lineTo(x, y) : FGMoments.Graph2dContext.lineTo(x, y);
                     isFirst = false;
                 }
 
-                FGApp.Graph2dContext.stroke();
+                FGMoments.Graph2dContext.stroke();
             }
           , getPersonName: function(person){
                 if (person)
@@ -597,7 +597,7 @@ app = Object.assign({
             }
 
           , createPersonGraphJson: function (){
-                localStorage.setItem("json_familie_graph", JSON.stringify(FGApp.PersonGraph));
+                localStorage.setItem("json_familie_graph", JSON.stringify(FGMoments.PersonGraph));
                 alert("Saved")
             }
           , saveToJsonDatei: function(name, content) {
@@ -641,7 +641,7 @@ app = Object.assign({
             }
         }
 
-        FGApp.init()
+        FGMoments.init()
     }
 
-}, app)
+}, Moments)

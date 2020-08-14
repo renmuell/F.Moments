@@ -2,10 +2,10 @@
  *  Events
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     route_events: function () {
 
     }
 
-}, app)
+}, Moments)

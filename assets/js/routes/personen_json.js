@@ -2,10 +2,10 @@
  *  Personen JSON
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     route_json_personen: function () {
-        app.json_editor_init("json_personen")
+        Moments.json_editor_init("json_personen")
     }
 
-}, app)
+}, Moments)

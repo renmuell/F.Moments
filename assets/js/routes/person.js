@@ -2,19 +2,19 @@
  *  Person
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     route_person: function () {
-        let id = app.getRouteData("id");
-        var person = app.get_person_data(id);
+        let id = Moments.getRouteData("id");
+        var person = Moments.get_person_data(id);
 
         if (person.Geburtstag && person.Geburtstag.length > 0)
-            person.Geburtstag = app.convertDINToISODate(person.Geburtstag)
+            person.Geburtstag = Moments.convertDINToISODate(person.Geburtstag)
 
         if (person.Gestorben && person.Gestorben.length > 0)
-            person.Gestorben = app.convertDINToISODate(person.Gestorben)
+            person.Gestorben = Moments.convertDINToISODate(person.Gestorben)
 
-        person.personOptionsHtml = app.get_person_options_html();
+        person.personOptionsHtml = Moments.get_person_options_html();
 
         if (typeof person.Bild === "undefined" || person.Bild == "") {
             if (person.Geschlecht == "Männlich") {
@@ -38,10 +38,10 @@ app = Object.assign({
         if (person.Partner) {
             person.Partner = person.Partner.map(p => {
                 if (p.Von) {
-                    p.Von = app.convertDINToISODate(p.Von)
+                    p.Von = Moments.convertDINToISODate(p.Von)
                 }
                 if (p.Bis) {
-                    p.Bis = app.convertDINToISODate(p.Bis)
+                    p.Bis = Moments.convertDINToISODate(p.Bis)
                 }
 
 
@@ -53,7 +53,7 @@ app = Object.assign({
         if (person.Ereignisse) {
             person.Ereignisse = person.Ereignisse.map(p => {
                 if (p.Wann) {
-                    p.Wann = app.convertDINToISODate(p.Wann)
+                    p.Wann = Moments.convertDINToISODate(p.Wann)
                 }
                 return p
             })
@@ -62,10 +62,10 @@ app = Object.assign({
         if (person.Berufe) {
             person.Berufe = person.Berufe.map(b => {
                 if (b.Von) {
-                    b.Von = app.convertDINToISODate(b.Von)
+                    b.Von = Moments.convertDINToISODate(b.Von)
                 }
                 if (b.Bis) {
-                    b.Bis = app.convertDINToISODate(b.Bis)
+                    b.Bis = Moments.convertDINToISODate(b.Bis)
                 }
                 return b
             })
@@ -74,15 +74,15 @@ app = Object.assign({
         if (person.Adressen) {
             person.Adressen = person.Adressen.map(a => {
                 if (a.Seit) {
-                    a.Seit = app.convertDINToISODate(a.Seit)
+                    a.Seit = Moments.convertDINToISODate(a.Seit)
                 }
                 return a
             })
         }
 
-        let html = app.renderTemplate("person_details", person);
+        let html = Moments.renderTemplate("person_details", person);
 
-        app.appendChild('[data-tab="person"] main', html)
+        Moments.appendChild('[data-tab="person"] main', html)
 
         document.querySelectorAll('[data-tab="person"] form select').forEach(elm => {
             elm.querySelectorAll("option").forEach(o => {
@@ -92,27 +92,27 @@ app = Object.assign({
             })
         });
 
-        app.bind("click", '[data-tab="person"] form table[data-key="Kinder"] tfoot button', app.kind_hinzufuegen)
-        app.bind("click", '[data-tab="person"] form table[data-key="Partner"] tfoot button', app.partner_hinzufuegen)
-        app.bind("click", '[data-tab="person"] form table[data-key="Ereignisse"] tfoot button', app.ereignisse_hinzufuegen)
-        app.bind("click", '[data-tab="person"] form table[data-key="Berufe"] tfoot button', app.berufe_hinzufuegen)
-        app.bind("click", '[data-tab="person"] form table[data-key="Addressen"] tfoot button', app.addressen_hinzufuegen)
+        Moments.bind("click", '[data-tab="person"] form table[data-key="Kinder"] tfoot button', Moments.kind_hinzufuegen)
+        Moments.bind("click", '[data-tab="person"] form table[data-key="Partner"] tfoot button', Moments.partner_hinzufuegen)
+        Moments.bind("click", '[data-tab="person"] form table[data-key="Ereignisse"] tfoot button', Moments.ereignisse_hinzufuegen)
+        Moments.bind("click", '[data-tab="person"] form table[data-key="Berufe"] tfoot button', Moments.berufe_hinzufuegen)
+        Moments.bind("click", '[data-tab="person"] form table[data-key="Addressen"] tfoot button', Moments.addressen_hinzufuegen)
 
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Kinder"] tbody button[data-delete]', app.kind_entfernen)
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Partner"] tbody button[data-delete]', app.partner_entfernen)
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Ereignisse"] tbody button[data-delete]', app.ereignisse_entfernen)
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Berufe"] tbody button[data-delete]', app.berufe_entfernen)
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Addressen"] tbody button[data-delete]', app.addressen_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Kinder"] tbody button[data-delete]', Moments.kind_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Partner"] tbody button[data-delete]', Moments.partner_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Ereignisse"] tbody button[data-delete]', Moments.ereignisse_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Berufe"] tbody button[data-delete]', Moments.berufe_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Addressen"] tbody button[data-delete]', Moments.addressen_entfernen)
 
-        app.bindAll("click", '[data-tab="person"] nav .save', app.save_person);
-        app.bindAll("click", '[data-tab="person"] nav .pre', app.pre_person);
-        app.bindAll("click", '[data-tab="person"] nav .next', app.next_person);
-        app.bindAll("click", '[data-tab="person"] nav .new', app.new_person);
-        app.bindAll("click", '[data-tab="person"] nav .delete', app.delete_person);
+        Moments.bindAll("click", '[data-tab="person"] nav .save', Moments.save_person);
+        Moments.bindAll("click", '[data-tab="person"] nav .pre', Moments.pre_person);
+        Moments.bindAll("click", '[data-tab="person"] nav .next', Moments.next_person);
+        Moments.bindAll("click", '[data-tab="person"] nav .new', Moments.new_person);
+        Moments.bindAll("click", '[data-tab="person"] nav .delete', Moments.delete_person);
     },
 
     next_person: function(){
-        let id = app.getRouteData("id");
+        let id = Moments.getRouteData("id");
         let personen = JSON
         .parse(localStorage.getItem("json_personen"))
         .Personen
@@ -131,13 +131,13 @@ app = Object.assign({
             nextIndex++;
         }
 
-        app.changeRoute("person", {
+        Moments.changeRoute("person", {
             id:  personen[nextIndex].Id
         })
     },
 
     pre_person: function(){
-        let id = app.getRouteData("id");
+        let id = Moments.getRouteData("id");
         let personen = JSON
         .parse(localStorage.getItem("json_personen"))
         .Personen
@@ -156,7 +156,7 @@ app = Object.assign({
             preIndex--;
         }
 
-        app.changeRoute("person", {
+        Moments.changeRoute("person", {
             id: personen[preIndex].Id
         })
     },
@@ -164,24 +164,24 @@ app = Object.assign({
     save_person: function () {
 
         let form = {
-            Id: parseInt(app.get_person_form_data("Id")),
-            Vornamen: app.get_person_form_data("Vornamen"),
-            Name: app.get_person_form_data("Name"),
-            Geboren: app.get_person_form_data("Geboren"),
-            Geburtstag: app.get_person_form_data("Geburtstag"),
-            Geburtsort: app.get_person_form_data("Geburtsort"),
-            Geschlecht: app.get_person_form_data("Geschlecht"),
-            Vater: parseInt(app.get_person_form_data("Vater")),
-            Mutter: parseInt(app.get_person_form_data("Mutter")),
+            Id: parseInt(Moments.get_person_form_data("Id")),
+            Vornamen: Moments.get_person_form_data("Vornamen"),
+            Name: Moments.get_person_form_data("Name"),
+            Geboren: Moments.get_person_form_data("Geboren"),
+            Geburtstag: Moments.get_person_form_data("Geburtstag"),
+            Geburtsort: Moments.get_person_form_data("Geburtsort"),
+            Geschlecht: Moments.get_person_form_data("Geschlecht"),
+            Vater: parseInt(Moments.get_person_form_data("Vater")),
+            Mutter: parseInt(Moments.get_person_form_data("Mutter")),
 
-            Nickname:app.get_person_form_data("Nickname"),
-            Geburtsuhrzeit:app.get_person_form_data("Geburtsuhrzeit"),
-            Sterbeuhrzeit:app.get_person_form_data("Sterbeuhrzeit"),
-            Gestorben:app.get_person_form_data("Gestorben"),
-            Glaube:app.get_person_form_data("Glaube"),
-            Bild: app.get_person_form_data("Bild"),
+            Nickname:Moments.get_person_form_data("Nickname"),
+            Geburtsuhrzeit:Moments.get_person_form_data("Geburtsuhrzeit"),
+            Sterbeuhrzeit:Moments.get_person_form_data("Sterbeuhrzeit"),
+            Gestorben:Moments.get_person_form_data("Gestorben"),
+            Glaube:Moments.get_person_form_data("Glaube"),
+            Bild: Moments.get_person_form_data("Bild"),
 
-            Note: app.get_person_form_data("Note")
+            Note: Moments.get_person_form_data("Note")
         };
 
         var KinderTr = document.querySelectorAll('[data-key="Kinder"] tbody tr')
@@ -203,8 +203,8 @@ app = Object.assign({
                 form.Partner.push({
                     Id: parseInt(ktr.querySelector('[name="Id"]').value),
                     Partner: parseInt(ktr.querySelector('[name="Partner"]').value),
-                    Von: app.convertISOToDINDate(ktr.querySelector('[name="Von"]').value),
-                    Bis: app.convertISOToDINDate(ktr.querySelector('[name="Bis"]').value),
+                    Von: Moments.convertISOToDINDate(ktr.querySelector('[name="Von"]').value),
+                    Bis: Moments.convertISOToDINDate(ktr.querySelector('[name="Bis"]').value),
                     Ort: ktr.querySelector('[name="Ort"]').value,
                     Typ: ktr.querySelector('[name="Typ"]').value
                 })
@@ -220,7 +220,7 @@ app = Object.assign({
                 form.Ereignisse.push({
                     Id: parseInt(ktr.querySelector('[name="Id"]').value),
                     Art: ktr.querySelector('[name="Art"]').value,
-                    Wann: app.convertISOToDINDate(ktr.querySelector('[name="Wann"]').value),
+                    Wann: Moments.convertISOToDINDate(ktr.querySelector('[name="Wann"]').value),
                     Note: ktr.querySelector('[name="Note"]').value,
                     Ort: ktr.querySelector('[name="Ort"]').value,
                 })
@@ -235,8 +235,8 @@ app = Object.assign({
             Berufetr.forEach(ktr => {
                 form.Berufe.push({
                     Id: parseInt(ktr.querySelector('[name="Id"]').value),
-                    Von: app.convertISOToDINDate(ktr.querySelector('[name="Von"]').value),
-                    Bis: app.convertISOToDINDate(ktr.querySelector('[name="Bis"]').value),
+                    Von: Moments.convertISOToDINDate(ktr.querySelector('[name="Von"]').value),
+                    Bis: Moments.convertISOToDINDate(ktr.querySelector('[name="Bis"]').value),
                     Bezeichnung: ktr.querySelector('[name="Bezeichnung"]').value,
                     Firma: ktr.querySelector('[name="Firma"]').value,
                 })
@@ -251,7 +251,7 @@ app = Object.assign({
             Addressentr.forEach(ktr => {
                 form.Adressen.push({
                     Id: parseInt(ktr.querySelector('[name="Id"]').value),
-                    Seit: app.convertISOToDINDate(ktr.querySelector('[name="Seit"]').value),
+                    Seit: Moments.convertISOToDINDate(ktr.querySelector('[name="Seit"]').value),
                     Ort: ktr.querySelector('[name="Ort"]').value,
                     Strasse: ktr.querySelector('[name="Strasse"]').value,
                     Nummer: ktr.querySelector('[name="Nummer"]').value,
@@ -262,10 +262,10 @@ app = Object.assign({
         }
 
         if (form.Geburtstag && form.Geburtstag.length > 0)
-            form.Geburtstag = app.convertISOToDINDate(form.Geburtstag)
+            form.Geburtstag = Moments.convertISOToDINDate(form.Geburtstag)
 
         if (form.Gestorben && form.Gestorben.length > 0)
-            form.Gestorben = app.convertISOToDINDate(form.Gestorben)
+            form.Gestorben = Moments.convertISOToDINDate(form.Gestorben)
 
 
         let personen = JSON
@@ -316,7 +316,7 @@ app = Object.assign({
         .parse(localStorage.getItem("json_personen"))
         .Personen
         .forEach(person => {
-            html += app.renderTemplate("options_person", person)
+            html += Moments.renderTemplate("options_person", person)
         })
 
         return html;
@@ -337,11 +337,11 @@ app = Object.assign({
         var viewbag = {
             Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Kinder"] tbody tr').length + 1
         };
-        viewbag.personOptionsHtml = app.get_person_options_html();
-        var html = app.renderTemplate("person_details_Kinder", viewbag)
+        viewbag.personOptionsHtml = Moments.get_person_options_html();
+        var html = Moments.renderTemplate("person_details_Kinder", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Kinder"] tbody').innerHTML += html;
 
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Kinder"] tbody button[data-delete]', app.kind_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Kinder"] tbody button[data-delete]', Moments.kind_entfernen)
 
         return false;
     },
@@ -355,11 +355,11 @@ app = Object.assign({
         var viewbag = {
             Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Partner"] tbody tr').length + 1
         };
-        viewbag.personOptionsHtml = app.get_person_options_html();
-        var html = app.renderTemplate("person_details_Partner", viewbag)
+        viewbag.personOptionsHtml = Moments.get_person_options_html();
+        var html = Moments.renderTemplate("person_details_Partner", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Partner"] tbody').innerHTML += html;
 
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Partner"] tbody button[data-delete]', app.partner_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Partner"] tbody button[data-delete]', Moments.partner_entfernen)
 
         return false;
     },
@@ -373,10 +373,10 @@ app = Object.assign({
         var viewbag = {
             Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Ereignisse"] tbody tr').length + 1
         };
-        var html = app.renderTemplate("person_details_Ereignisse", viewbag)
+        var html = Moments.renderTemplate("person_details_Ereignisse", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Ereignisse"] tbody').innerHTML += html;
 
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Ereignisse"] tbody button[data-delete]', app.ereignisse_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Ereignisse"] tbody button[data-delete]', Moments.ereignisse_entfernen)
         return false;
     },
     ereignisse_entfernen: function(){
@@ -389,10 +389,10 @@ app = Object.assign({
         var viewbag = {
             Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Berufe"] tbody tr').length + 1
         };
-        var html = app.renderTemplate("person_details_Berufe", viewbag)
+        var html = Moments.renderTemplate("person_details_Berufe", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Berufe"] tbody').innerHTML += html;
 
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Berufe"] tbody button[data-delete]', app.berufe_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Berufe"] tbody button[data-delete]', Moments.berufe_entfernen)
         return false;
     },
     berufe_entfernen: function(){
@@ -405,10 +405,10 @@ app = Object.assign({
         var viewbag = {
             Id: document.querySelectorAll('[data-tab="person"] form table[data-key="Addressen"] tbody tr').length + 1
         };
-        var html = app.renderTemplate("person_details_Adressen", viewbag)
+        var html = Moments.renderTemplate("person_details_Adressen", viewbag)
         document.querySelector('[data-tab="person"] form table[data-key="Addressen"] tbody').innerHTML += html;
 
-        app.bindAll("click", '[data-tab="person"] form table[data-key="Addressen"] tbody button[data-delete]', app.addressen_entfernen)
+        Moments.bindAll("click", '[data-tab="person"] form table[data-key="Addressen"] tbody button[data-delete]', Moments.addressen_entfernen)
         return false;
     },
     addressen_entfernen: function(){
@@ -420,7 +420,7 @@ app = Object.assign({
         event.preventDefault();
 
         if (confirm("Möchten Sie den Nutzer wirklich löschen?")) {
-            let id = app.getRouteData("id");
+            let id = Moments.getRouteData("id");
 
             let json = JSON
             .parse(localStorage.getItem("json_personen"))
@@ -438,10 +438,10 @@ app = Object.assign({
 
             localStorage.setItem("json_personen", JSON.stringify(json))
 
-            app.changeRoute("personen")
+            Moments.changeRoute("personen")
         }
 
         return false;
     }
 
-}, app)
+}, Moments)

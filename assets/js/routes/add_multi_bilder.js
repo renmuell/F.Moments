@@ -2,16 +2,16 @@
  *  add_multi_bilder
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     route_add_multi_bilder: function () {
-        app.bindAll("click", '[data-tab="add_multi_bilder"] nav .save', app.add_multi_bilder_save);
+        Moments.bindAll("click", '[data-tab="add_multi_bilder"] nav .save', Moments.add_multi_bilder_save);
     },
 
     add_multi_bilder_save: function () {
 
         var newId = -1;
-        var json = app.getStorageJson("json_bilder")
+        var json = Moments.getStorageJson("json_bilder")
         if (json) {
             var maxId = -1;
             var i = -1;
@@ -45,7 +45,7 @@ app = Object.assign({
 
         localStorage.setItem("json_bilder", JSON.stringify(json))
 
-        app.changeRoute("bilder")
+        Moments.changeRoute("bilder")
     }
 
-}, app)
+}, Moments)

@@ -4,7 +4,7 @@
 
 (function(){
 
-    app = Object.assign({
+    Moments = Object.assign({
 
         route_timeline: function () {
 
@@ -12,7 +12,7 @@
 
             document.querySelector('[data-tab="timeline"] main').innerHTML = "";
 
-            var json = app.getStorageJson("json_personen")
+            var json = Moments.getStorageJson("json_personen")
             var daten = json;
 
             if (daten === null) {
@@ -257,7 +257,7 @@
             }
         }
 
-    }, app)
+    }, Moments)
     var obj;
     var timeline = [];
     var divPersonList;

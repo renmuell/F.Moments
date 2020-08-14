@@ -2,17 +2,17 @@
  *  JSON Editor
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     json_editor_init: function (id) {
-        app.json_editor_bind(id);
-        app.json_editor_laod(id);
+        Moments.json_editor_bind(id);
+        Moments.json_editor_laod(id);
     },
 
     json_editor_bind: function(id) {
-        app.bind("change", '#'+id+' input[type="file"]', app.json_editor_laod_change)
-        app.bind("click", '#'+id+' button.download', app.json_editor_laod_change_download)
-        app.bind("click", '#'+id+' button.save', app.json_editor_laod_change_save)
+        Moments.bind("change", '#'+id+' input[type="file"]', Moments.json_editor_laod_change)
+        Moments.bind("click", '#'+id+' button.download', Moments.json_editor_laod_change_download)
+        Moments.bind("click", '#'+id+' button.save', Moments.json_editor_laod_change_save)
         document.querySelector('#'+id+' input[type="file"]').dataset.json = id;
         document.querySelector('#'+id+' button.download').dataset.json = id;
         document.querySelector('#'+id+' button.save').dataset.json = id;
@@ -29,7 +29,7 @@ app = Object.assign({
             reader.addEventListener('load', function() {
                 try {
                     localStorage.setItem(event.target.dataset.json, reader.result)
-                    app.json_editor_laod(event.target.dataset.json);
+                    Moments.json_editor_laod(event.target.dataset.json);
                 } catch (error) {
                     console.log(error)
                 }
@@ -44,7 +44,7 @@ app = Object.assign({
     json_editor_laod_change_download: function (event) {
         event.preventDefault();
         let json = document.querySelector("#"+event.target.dataset.json+" textarea").value;
-        app.downloadJson(json, event.target.dataset.json);
+        Moments.downloadJson(json, event.target.dataset.json);
         return false;
     },
 
@@ -56,4 +56,4 @@ app = Object.assign({
         return false;
     }
 
-}, app)
+}, Moments)

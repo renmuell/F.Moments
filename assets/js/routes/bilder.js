@@ -2,44 +2,44 @@
  *  Bilder
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     route_bilder: function () {
 
-        var view = app.getRouteData("view");
+        var view = Moments.getRouteData("view");
 
         if (view == null) {
             view = "cards"
         }
 
-        app.loadBilder(view)
+        Moments.loadBilder(view)
 
-        app.bindAll("click", '[data-tab="bilder"] nav .new', app.new_bild);
-        app.bindAll("click", '[data-tab="bilder"] nav .table', app.bilder_show_as_table);
-        app.bindAll("click", '[data-tab="bilder"] nav .cards', app.bilder_show_as_cards);
-        app.bindAll("click", '[data-tab="bilder"] nav .add_multi', app.bilder_add_multi);
+        Moments.bindAll("click", '[data-tab="bilder"] nav .new', Moments.new_bild);
+        Moments.bindAll("click", '[data-tab="bilder"] nav .table', Moments.bilder_show_as_table);
+        Moments.bindAll("click", '[data-tab="bilder"] nav .cards', Moments.bilder_show_as_cards);
+        Moments.bindAll("click", '[data-tab="bilder"] nav .add_multi', Moments.bilder_add_multi);
     },
 
     bilder_add_multi: function() {
-        app.changeRoute("add_multi_bilder")
+        Moments.changeRoute("add_multi_bilder")
     },
 
     bilder_show_as_cards: function(){
-        app.changeRoute("bilder", {
+        Moments.changeRoute("bilder", {
             view: "cards"
         })
     },
 
     bilder_show_as_table: function(){
-        app.changeRoute("bilder", {
+        Moments.changeRoute("bilder", {
             view: "table"
         })
     },
 
     loadBilder: function(view) {
 
-        app.clearChilds('[data-tab="bilder"] main');
-        var json = app.getStorageJson("json_bilder")
+        Moments.clearChilds('[data-tab="bilder"] main');
+        var json = Moments.getStorageJson("json_bilder")
 
         var innerHtml = "";
         if (json) {
@@ -47,38 +47,38 @@ app = Object.assign({
                 bild.PersonenLine = "";
                 if (bild.Personen) {
                     bild.Personen.forEach(function(p){
-                        var person = app.get_person_data(p.Id);
+                        var person = Moments.get_person_data(p.Id);
                         bild.PersonenLine += person.Vornamen + " " + person.Name + ";"
                     })
                 }
                 if (view == "cards")
                     bild.URL = bild.URL.replace(".jpeg", "_autox300.jpeg")
-                innerHtml += app.renderTemplate("bild_"+view, bild);
+                innerHtml += Moments.renderTemplate("bild_"+view, bild);
             })
         }
 
-        app.appendChild('[data-tab="bilder"] main', app.renderTemplate("bild_"+view+"_wrapper", {
+        Moments.appendChild('[data-tab="bilder"] main', Moments.renderTemplate("bild_"+view+"_wrapper", {
             body: innerHtml
         }));
 
-        app.bindBilder(view);
+        Moments.bindBilder(view);
     },
 
     bindBilder: function(view) {
 
         if (view == "cards") {
-            app.bindAll("click", "#bilder_list .bild main", app.bilderClick);
-            app.bindAll("keypress", "#bilder_list .bild main", app.bilderClick);
+            Moments.bindAll("click", "#bilder_list .bild main", Moments.bilderClick);
+            Moments.bindAll("keypress", "#bilder_list .bild main", Moments.bilderClick);
         }
 
         if (view == "table") {
-            app.bindAll("click", '[data-tab="bilder"] main .table tbody tr', app.bilderClick);
-            app.bindAll("keypress", '[data-tab="bilder"] main .table tbody tr', app.bilderClick);
+            Moments.bindAll("click", '[data-tab="bilder"] main .table tbody tr', Moments.bilderClick);
+            Moments.bindAll("keypress", '[data-tab="bilder"] main .table tbody tr', Moments.bilderClick);
         }
     },
 
     bilderClick: function (event) {
-        app.changeRoute("bild", {
+        Moments.changeRoute("bild", {
             id: event.currentTarget.dataset.id
         });
     },
@@ -88,7 +88,7 @@ app = Object.assign({
         event.preventDefault();
 
         var newId = -1;
-        var json = app.getStorageJson("json_bilder")
+        var json = Moments.getStorageJson("json_bilder")
         if (json) {
             var maxId = -1;
             var i = -1;
@@ -114,11 +114,11 @@ app = Object.assign({
             }]))
         }
 
-        app.changeRoute("bild", {
+        Moments.changeRoute("bild", {
             id: newId
         })
 
         return false;
     }
 
-}, app)
+}, Moments)

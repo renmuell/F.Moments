@@ -2,24 +2,24 @@
  *  Route
  */
 
-app = Object.assign({
+Moments = Object.assign({
 
     startRouting: function() {
-        var hash = app.getRoute();
-        if (hash.length == 0) { app.changeRoute("personen", { person_id: 1 }); return; }
-        app.routeApply(hash);
+        var hash = Moments.getRoute();
+        if (hash.length == 0) { Moments.changeRoute("personen", { person_id: 1 }); return; }
+        Moments.routeApply(hash);
 
-        window.addEventListener('hashchange', app.routeChange, false);
+        window.addEventListener('hashchange', Moments.routeChange, false);
     },
 
     routeChange: function () {
-        app.routeApply(app.getRoute());
+        Moments.routeApply(Moments.getRoute());
     },
 
     routeApply: function (route) {
-        app.updateNav();
+        Moments.updateNav();
         setTimeout(function(){
-            app["route_"+route].call();
+            Moments["route_"+route].call();
         }, 100)
     },
 
@@ -45,4 +45,4 @@ app = Object.assign({
         return (new URL(location.href)).searchParams.get(key);
     }
 
-}, app)
+}, Moments)
