@@ -20,6 +20,8 @@ Moments = Object.assign({
         Moments.bindAll("click", '[data-tab="bilder"] nav .add_multi', Moments.bilder_add_multi);
     },
 
+    bilder_init_menu: false,
+
     bilder_add_multi: function() {
         Moments.changeRoute("add_multi_bilder")
     },
@@ -37,13 +39,62 @@ Moments = Object.assign({
     },
 
     loadBilder: function(view) {
+        let offset = view == "cards" ? 10 : 100;
+        let page = Moments.getRouteData("page");
+
+        if (page == null) page = 1;
 
         Moments.clearChilds('[data-tab="bilder"] main');
         var json = Moments.getStorageJson("json_bilder")
 
+        var length = 0;
         var innerHtml = "";
         if (json) {
-            json.forEach(bild => {
+            length = json.length;
+            numPages = Math.ceil(length/offset);
+
+            if (Moments.bilder_init_menu == false) {
+                Moments.bilder_init_menu = true;
+
+                var button_pre = document.createElement("button");
+                button_pre.innerHTML = '<i class="fas fa-chevron-left"></i>'
+                button_pre.onclick = function () {
+                    Moments.changeRoute("bilder", {
+                        page: parseInt(page) > 1 ? parseInt(page)-1 : page,
+                        view: view
+                    })
+                }
+                var li_pre = document.createElement("li");
+                li_pre.appendChild(button_pre)
+                document.querySelector('[data-tab="bilder"] nav ul').appendChild(li_pre);
+
+                var label_paginate = document.createElement("label");
+                label_paginate.innerHTML = page + " of " + numPages
+                var li_paginate = document.createElement("li");
+                li_paginate.appendChild(label_paginate)
+                document.querySelector('[data-tab="bilder"] nav ul').appendChild(li_paginate);
+
+                var button_next = document.createElement("button");
+                button_next.innerHTML = '<i class="fas fa-chevron-right"></i>'
+                button_next.onclick = function () {
+                    Moments.changeRoute("bilder", {
+                        page: parseInt(page) < numPages ? parseInt(page)+1 : page,
+                        view: view
+                    })
+                }
+                var li_next = document.createElement("li");
+                li_next.appendChild(button_next)
+                document.querySelector('[data-tab="bilder"] nav ul').appendChild(li_next);
+
+                var label_length = document.createElement("label");
+                label_length.innerHTML = length + ' <i class="fas fa-images"></i>'
+                var li_length = document.createElement("li");
+                li_length.appendChild(label_length)
+                document.querySelector('[data-tab="bilder"] nav ul').appendChild(li_length);
+            }
+
+            json.slice((page - 1) * offset, page * offset).forEach(bild => {
+
                 bild.PersonenLine = "";
                 if (bild.Personen) {
                     bild.Personen.forEach(function(p){

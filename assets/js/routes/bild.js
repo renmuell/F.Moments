@@ -105,7 +105,13 @@ Moments = Object.assign({
 
         Moments.bindAll("change", '[data-tab="bild"] form [name="URL"]', Moments.bild_person_url_change)
 
+        Moments.bild_hide_markers();
+
+        document.querySelector('[data-tab="bild"] nav .hide_edit').style.display = "none";
+        document.querySelector('[data-tab="bild"] nav .show_edit').style.display = "block";
+
         setTimeout(function(){
+
             Moments.zoom_with();
             let bild = Moments.bild_get_data(id)
             if (bild.URL === undefined || bild.URL === "") {
@@ -143,14 +149,20 @@ Moments = Object.assign({
     },
 
     bild_hide_markers: function() {
+        document.querySelector('[data-tab="bild"] nav .hide_markers').style.display = "none";
+        document.querySelector('[data-tab="bild"] nav .show_markers').style.display = "block";
         document.querySelector('[data-tab="bild"] .image-container .markers').style.display = "none"
     },
 
     bild_show_markers: function() {
+        document.querySelector('[data-tab="bild"] nav .hide_markers').style.display = "block";
+        document.querySelector('[data-tab="bild"] nav .show_markers').style.display = "none";
         document.querySelector('[data-tab="bild"] .image-container .markers').style.display = "block"
     },
 
     bild_hide_edit: function() {
+        document.querySelector('[data-tab="bild"] nav .hide_edit').style.display = "none";
+        document.querySelector('[data-tab="bild"] nav .show_edit').style.display = "block";
         document.querySelector('[data-tab="bild"]').classList.add("hideEdit")
         if (Moments.bild_zoom_factor!= 1) {
             Moments.zoom_original();
@@ -159,6 +171,8 @@ Moments = Object.assign({
     },
 
     bild_show_edit: function() {
+        document.querySelector('[data-tab="bild"] nav .hide_edit').style.display = "block";
+        document.querySelector('[data-tab="bild"] nav .show_edit').style.display = "none";
         document.querySelector('[data-tab="bild"]').classList.remove("hideEdit")
         if (Moments.bild_zoom_factor!= 1) {
             Moments.zoom_original();
@@ -171,6 +185,9 @@ Moments = Object.assign({
 
     zoom_with: function () {
         if (Moments.bild_zoom_factor == 1) {
+            document.querySelector('[data-tab="bild"] nav .zoom_with').style.display = "none";
+            document.querySelector('[data-tab="bild"] nav .zoom_original').style.display = "block";
+
             var img = document.querySelector('[data-tab="bild"] .image-container img');
 
             if (typeof Moments.bild_orginal_img_width === "undefined") {
@@ -206,6 +223,9 @@ Moments = Object.assign({
         document.querySelector('[data-tab="bild"] .image-container canvas').height = img.height
     },
     zoom_original: function() {
+
+        document.querySelector('[data-tab="bild"] nav .zoom_with').style.display = "block";
+        document.querySelector('[data-tab="bild"] nav .zoom_original').style.display = "none";
 
         if (Moments.bild_orginal_img_width) {
             var img = document.querySelector('[data-tab="bild"] .image-container img');

@@ -28,6 +28,7 @@ Moments = Object.assign({
           , $personPlates: []
 
           , touchMarking: false
+          , touchMoving: false
 
           , init: function(){
                 if (Moments.FGAppInit) return;
@@ -52,8 +53,8 @@ Moments = Object.assign({
                     if (FGMoments.PersonGraph == null){
                         FGMoments.PersonGraph = {
                             positions: {},
-                            width: "10000px",
-                            height: "10000px"
+                            width: "1000px",
+                            height: "1000px"
                         }
                     }
 
@@ -157,7 +158,7 @@ Moments = Object.assign({
                     },
                     function () {
                         FGMoments.touchMarking = false;
-                        document.querySelector('[data-tab="familie"] nav .fa-vector-square').parentElement.style.background = "white"
+                        document.querySelector('[data-tab="familie"] nav .fa-mouse-pointer').parentElement.style.background = "white"
 
                         if (FGMoments.makierung){
 
@@ -257,12 +258,23 @@ Moments = Object.assign({
                     });
                 })
 
-                FGMoments.addButtonToMenu('<i class="fas fa-vector-square"></i> <i class="fas fa-hand-point-up"></i>', function(event){
+                FGMoments.addButtonToMenu('<i class="fas fa-mouse-pointer"></i>', function(event){
                     FGMoments.touchMarking = !FGMoments.touchMarking;
                     if (FGMoments.touchMarking) {
                         event.srcElement.style.background = "lightblue"
                     } else {
                         event.srcElement.style.background = "white"
+                    }
+                })
+
+                FGMoments.addButtonToMenu('<i class="fas fa-arrows-alt"></i>', function(event){
+                    FGMoments.touchMoving = !FGMoments.touchMoving;
+                    if (FGMoments.touchMoving) {
+                        event.srcElement.style.background = "lightblue"
+                        FGMoments.$GraphBoard.style.pointerEvents = "none"
+                    } else {
+                        event.srcElement.style.background = "white"
+                        FGMoments.$GraphBoard.style.pointerEvents = "all"
                     }
                 })
            }

@@ -1,3 +1,6 @@
+
+// https://www.npmjs.com/package/jimp
+
 var Jimp = require("jimp");
 const inputFolder = './assets/img/photos/';
 const fs = require('fs');

@@ -4,6 +4,8 @@
 
 Moments = Object.assign({
 
+    personen_init_menu: false,
+
     route_personen: function () {
 
         var view = Moments.getRouteData("view");
@@ -32,13 +34,61 @@ Moments = Object.assign({
     },
 
     loadPersonen: function(view) {
+        let offset = view == "cards" ? 10 : 100;
+        let page = Moments.getRouteData("page");
+
+        if (page == null) page = 1;
 
         Moments.clearChilds('[data-tab="personen"] main');
 
+        var length = 0;
         var innerHtml = "";
         var json = Moments.getStorageJson("json_personen")
         if (json && json.Personen) {
-            json.Personen.forEach(json => {
+            length = json.Personen.length;
+            numPages = Math.ceil(length/offset);
+
+            if (Moments.personen_init_menu == false) {
+                Moments.personen_init_menu = true;
+
+                var button_pre = document.createElement("button");
+                button_pre.innerHTML = '<i class="fas fa-chevron-left"></i>'
+                button_pre.onclick = function () {
+                    Moments.changeRoute("personen", {
+                        page: parseInt(page) > 1 ? parseInt(page)-1 : page,
+                        view: view
+                    })
+                }
+                var li_pre = document.createElement("li");
+                li_pre.appendChild(button_pre)
+                document.querySelector('[data-tab="personen"] nav ul').appendChild(li_pre);
+
+                var label_paginate = document.createElement("label");
+                label_paginate.innerHTML = page + " of " + numPages
+                var li_paginate = document.createElement("li");
+                li_paginate.appendChild(label_paginate)
+                document.querySelector('[data-tab="personen"] nav ul').appendChild(li_paginate);
+
+                var button_next = document.createElement("button");
+                button_next.innerHTML = '<i class="fas fa-chevron-right"></i>'
+                button_next.onclick = function () {
+                    Moments.changeRoute("personen", {
+                        page: parseInt(page) < numPages ? parseInt(page)+1 : page,
+                        view: view
+                    })
+                }
+                var li_next = document.createElement("li");
+                li_next.appendChild(button_next)
+                document.querySelector('[data-tab="personen"] nav ul').appendChild(li_next);
+
+                var label_length = document.createElement("label");
+                label_length.innerHTML = length + ' <i class="fas fa-users"></i>'
+                var li_length = document.createElement("li");
+                li_length.appendChild(label_length)
+                document.querySelector('[data-tab="personen"] nav ul').appendChild(li_length);
+            }
+
+            json.Personen.slice((page - 1) * offset, page * offset).forEach(json => {
 
                 if (typeof json.Bild === "undefined" || json.Bild == "") {
                     if (json.Geschlecht == "Männlich") {

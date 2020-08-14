@@ -2,6 +2,16 @@
     position: relative;
 }
 
+
+[data-tab="bild"] nav .zoom_with,
+[data-tab="bild"] nav .zoom_original,
+[data-tab="bild"] nav .hide_markers,
+[data-tab="bild"] nav .show_markers,
+[data-tab="bild"] nav .hide_edit,
+[data-tab="bild"] nav .show_edit {
+    display: none;
+}
+
 [data-tab="bild"] .image-container {
     position: absolute;
     width: 60%;

@@ -54,7 +54,13 @@ body section nav ul > li {
     box-sizing: border-box;
     float: left;
     display: block;
-    border-right: 1px solid #ccc;
+
+}
+
+body section nav ul > li > a,
+body section nav ul > li > label,
+body section nav ul > li > button {
+    border-right: 1px solid #ccc!important;
 }
 
 body section nav ul > li > a {
