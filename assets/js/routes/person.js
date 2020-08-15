@@ -20,12 +20,12 @@ Moments = Object.assign({
             if (typeof person.Geschlecht == "undefined") {
                 person.HeaderBild = ""
             } else if (person.Geschlecht == "Männlich") {
-                person.HeaderBild = "assets/img/familyGraph/man.png";
+                person.HeaderBild = "assets/img/man.png";
             } else {
-                person.HeaderBild = "assets/img/familyGraph/woman.png";
+                person.HeaderBild = "assets/img/woman.png";
             }
         } else {
-            person.HeaderBild = person.Bild.replace(".jpeg", "_autox200.jpeg")
+            person.HeaderBild = person.Bild.replace(".jpeg", "-AUTOx200.jpeg")
         }
 
         if (person.Kinder) {

@@ -602,14 +602,14 @@ Moments = Object.assign({
                 if (typeof person === 'undefined'){
                 }
                 else if (person.Bild){
-                    img.style.backgroundImage = "url('"+person.Bild.replace(".jpeg", "_autox52.jpeg");+"')";
+                    img.style.backgroundImage = "url('"+person.Bild.replace(".jpeg", "-AUTOx50.jpeg");+"')";
                 }
                 else if (typeof person.Geschlecht === 'undefined'){
                 }
                 else if (person.Geschlecht === "Männlich")
-                    img.style.backgroundImage = "url('assets/img/familyGraph/man.png')";
+                    img.style.backgroundImage = "url('assets/img/man.png')";
                 else
-                    img.style.backgroundImage = "url('assets/img/familyGraph/woman.png')";
+                    img.style.backgroundImage = "url('assets/img/woman.png')";
 
                 return img;
             }

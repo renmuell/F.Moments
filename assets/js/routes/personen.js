@@ -94,13 +94,13 @@ Moments = Object.assign({
                     if (typeof json.Geschlecht == "undefined") {
                         json.Bild = ""
                     } else if (json.Geschlecht == "Männlich") {
-                        json.Bild = "assets/img/familyGraph/man.png";
+                        json.Bild = "assets/img/man.png";
                     } else {
-                        json.Bild = "assets/img/familyGraph/woman.png";
+                        json.Bild = "assets/img/woman.png";
                     }
                 } else {
                     if (view == "cards")
-                        json.Bild = json.Bild.replace(".jpeg", "_autox300.jpeg")
+                        json.Bild = json.Bild.replace(".jpeg", "-AUTOx300.jpeg")
                 }
 
                 innerHtml += Moments.renderTemplate("person_"+view, json);

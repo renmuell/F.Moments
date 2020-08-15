@@ -103,7 +103,7 @@ Moments = Object.assign({
                     })
                 }
                 if (view == "cards")
-                    bild.URL = bild.URL.replace(".jpeg", "_autox300.jpeg")
+                    bild.URL = bild.URL.replace(".jpeg", "-AUTOx300.jpeg")
                 innerHtml += Moments.renderTemplate("bild_"+view, bild);
             })
         }

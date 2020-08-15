@@ -1,3 +1,5 @@
 assets/img/photos
 node_modules
 package-lock.json
+new_files.txt
+db
