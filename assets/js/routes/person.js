@@ -17,7 +17,9 @@ Moments = Object.assign({
         person.personOptionsHtml = Moments.get_person_options_html();
 
         if (typeof person.Bild === "undefined" || person.Bild == "") {
-            if (person.Geschlecht == "Männlich") {
+            if (typeof person.Geschlecht == "undefined") {
+                person.HeaderBild = ""
+            } else if (person.Geschlecht == "Männlich") {
                 person.HeaderBild = "assets/img/familyGraph/man.png";
             } else {
                 person.HeaderBild = "assets/img/familyGraph/woman.png";

@@ -105,7 +105,7 @@ Moments = Object.assign({
 
         Moments.bindAll("change", '[data-tab="bild"] form [name="URL"]', Moments.bild_person_url_change)
 
-        Moments.bild_hide_markers();
+        Moments.bild_show_markers();
 
         document.querySelector('[data-tab="bild"] nav .hide_edit').style.display = "none";
         document.querySelector('[data-tab="bild"] nav .show_edit').style.display = "block";
@@ -394,6 +394,8 @@ Moments = Object.assign({
         Moments.bindAll("change", '[data-tab="bild"] form table[data-key="Personen"] tbody [name="Y"]', Moments.bild_person_Y_change)
         Moments.bindAll("change", '[data-tab="bild"] form table[data-key="Personen"] tbody [name="Width"]', Moments.bild_person_Width_change)
         Moments.bindAll("change", '[data-tab="bild"] form table[data-key="Personen"] tbody [name="Height"]', Moments.bild_person_Height_change)
+
+        Moments.bild_show_markers();
 
         return false;
     },

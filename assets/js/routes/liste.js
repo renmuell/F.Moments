@@ -323,7 +323,7 @@ Moments = Object.assign({
       var img = document.createElement("img");
 
       if (typeof person === 'undefined'){
-        img.src = "img/question.jpg";
+        img.src = "img/question.png";
       }
       else if (person.Geschlecht === "Mänlich")
         img.src = "img/man.png";

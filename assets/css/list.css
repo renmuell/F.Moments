@@ -20,8 +20,6 @@ section .list > .item {
 }
 
 section .list > .item main {
-    /* border: 1px solid #efefef; */
-    /* border-radius: 5px; */
     border: 1px solid transparent;
     overflow: hidden;
     cursor: pointer;
@@ -43,5 +41,6 @@ section .list > .item main .img{
 }
 
 section .list > .item main section {
+    text-align: center;
     padding:20px;
 }

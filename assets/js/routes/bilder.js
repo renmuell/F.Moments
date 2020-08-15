@@ -39,7 +39,7 @@ Moments = Object.assign({
     },
 
     loadBilder: function(view) {
-        let offset = view == "cards" ? 10 : 100;
+        let offset = view == "cards" ? 20 : 100;
         let page = Moments.getRouteData("page");
 
         if (page == null) page = 1;

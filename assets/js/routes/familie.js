@@ -307,6 +307,7 @@ Moments = Object.assign({
                 return colorPicker
            }
           , draw: function(){
+
                 FGMoments.Graph2dContext.clearRect(0, 0, FGMoments.$GraphCanvas.width, FGMoments.$GraphCanvas.height);
                  document.querySelectorAll('.familyPlate')
                         .forEach((f) => FGMoments.$GraphBoard.removeChild(f))
@@ -488,6 +489,10 @@ Moments = Object.assign({
                 $personImage.style.height = ((FGMoments.personWidth)/2) + 'px'
                 $personImage.style.marginLeft = ((FGMoments.personWidth)/4) + 'px'
                 $personImage.style.border = "1px solid #ccc"
+                $personImage.style.backgroundColor = "white"
+                $personImage.style.backgroundRepeat = "no-repeat";
+                $personImage.style.backgroundPosition = "center center";
+                $personImage.style.backgroundSize = "cover";
                 $personImage.style.borderRadius = ((FGMoments.personWidth)/4) + 'px'
                 $personImage.style.pointerEvents = "none"
                 $personPlate.appendChild($personImage)
@@ -592,18 +597,19 @@ Moments = Object.assign({
             }
 
           , createImage: function(person){
-                var img = document.createElement("img");
+                var img = document.createElement("div");
 
                 if (typeof person === 'undefined'){
-                    img.src = "assets/img/familyGraph/question.jpg";
                 }
                 else if (person.Bild){
-                    img.src = person.Bild.replace(".jpeg", "_autox52.jpeg");
+                    img.style.backgroundImage = "url('"+person.Bild.replace(".jpeg", "_autox52.jpeg");+"')";
+                }
+                else if (typeof person.Geschlecht === 'undefined'){
                 }
                 else if (person.Geschlecht === "Männlich")
-                    img.src = "assets/img/familyGraph/man.png";
+                    img.style.backgroundImage = "url('assets/img/familyGraph/man.png')";
                 else
-                    img.src = "assets/img/familyGraph/woman.png";
+                    img.style.backgroundImage = "url('assets/img/familyGraph/woman.png')";
 
                 return img;
             }

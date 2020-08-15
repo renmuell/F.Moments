@@ -34,7 +34,7 @@ Moments = Object.assign({
     },
 
     loadPersonen: function(view) {
-        let offset = view == "cards" ? 10 : 100;
+        let offset = view == "cards" ? 20 : 100;
         let page = Moments.getRouteData("page");
 
         if (page == null) page = 1;
@@ -91,7 +91,9 @@ Moments = Object.assign({
             json.Personen.slice((page - 1) * offset, page * offset).forEach(json => {
 
                 if (typeof json.Bild === "undefined" || json.Bild == "") {
-                    if (json.Geschlecht == "Männlich") {
+                    if (typeof json.Geschlecht == "undefined") {
+                        json.Bild = ""
+                    } else if (json.Geschlecht == "Männlich") {
                         json.Bild = "assets/img/familyGraph/man.png";
                     } else {
                         json.Bild = "assets/img/familyGraph/woman.png";
